@@ -144,8 +144,10 @@ function buildOrlandoDays(rows: Row[], XLSX: XLSXModule): Day[] {
       const raw = pick(row, period.keys)
       if (isEmptyPeriod(raw)) continue
       const text = clean(raw)
+      const periodSlug =
+        period.key === 'Manhã' ? 'manha' : period.key === 'Tarde' ? 'tarde' : 'noite'
       activities.push({
-        id: uid('act'),
+        id: `act-${date}-${periodSlug}`,
         time: period.time,
         title: periodTitle(period.key, text),
         location:
@@ -160,7 +162,7 @@ function buildOrlandoDays(rows: Row[], XLSX: XLSXModule): Day[] {
     if (!activities.length) continue
 
     days.push({
-      id: uid('day'),
+      id: `day-${date}`,
       date,
       label,
       dayNotes: dayNotes || undefined,

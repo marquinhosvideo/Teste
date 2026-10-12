@@ -4,30 +4,38 @@
   "startDate": "2026-11-27",
   "endDate": "2026-12-14",
   "currency": "BRL",
+  "budgetLimits": {
+    "marcos": 5000,
+    "dielen": 5000,
+    "helena": 5000,
+    "alimentacao": 5000,
+    "outros": 5000
+  },
   "days": [
     {
-      "id": "day-002",
+      "id": "day-2026-11-27",
       "date": "2026-11-27",
       "label": "✈️ Viagem",
+      "dayNotes": "📍 Aeroporto do Galeão (GIG)\n\n👶 Carrinho vai até a porta do avião. Levar no bagagem de mão: troca de roupa, fraldas para ~12h, lanches, mamadeira/copo, brinquedo novo. Tentar manter o ritual de dormir no voo.\n\n📝 26/11 é Ação de Graças e 27/11 é a Black Friday (vocês estarão voando) — as ofertas online da Black Friday/Cyber Monday valem até 30/11.",
       "activities": [
         {
-          "id": "act-001",
+          "id": "act-2026-11-27-noite",
           "time": "19:00",
           "title": "Noite — ️ VIAGEM — Embarque Rio → Miami às 22:25.",
           "location": "Aeroporto do Galeão (GIG)",
           "notes": "✈️ VIAGEM — Embarque Rio → Miami às 22:25.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Aeroporto do Galeão (GIG)\n\n👶 Carrinho vai até a porta do avião. Levar no bagagem de mão: troca de roupa, fraldas para ~12h, lanches, mamadeira/copo, brinquedo novo. Tentar manter o ritual de dormir no voo.\n\n📝 26/11 é Ação de Graças e 27/11 é a Black Friday (vocês estarão voando) — as ofertas online da Black Friday/Cyber Monday valem até 30/11."
+      ]
     },
     {
-      "id": "day-006",
+      "id": "day-2026-11-28",
       "date": "2026-11-28",
       "label": "✈️ Viagem + 🛒 Mercado",
+      "dayNotes": "📍 Walmart Supercenter – 8990 Turkey Lake Rd, Orlando, FL 32819 (alternativa: Target Millenia ⭐ – 4750 Millenia Plaza Way, Orlando, FL 32839)\n\n🚗 MIA → hotel: ~4h30 sem trânsito (~377 km); contar 5h–5h30 com paradas. Walmart: ~10 min do hotel.\n\n👶 Criança dorme no carro — planejar a parada principal para depois do cochilo. Paradas nas áreas de serviço da Turnpike. Lei da Flórida exige cadeirinha para menores de 4 anos.\n\n📝 Pedágios: confirmar o programa de pedágio da locadora. Opção B (NÃO recomendada): Sawgrass Mills abre de manhã, mas sábado pós-Black Friday + noite sem dormir com criança = muito desgaste.",
       "activities": [
         {
-          "id": "act-003",
+          "id": "act-2026-11-28-manha",
           "time": "09:00",
           "title": "Manhã — ️ VIAGEM — Chegada em Miami (madrugada/manhã cedo — conferir no bilhete), imigração, retirada do …",
           "location": "Walmart Supercenter – 8990 Turkey Lake Rd, Orlando, FL 32819 (alternativa: Target Millenia ⭐ – 4750 Millenia Plaza Way, Orlando, FL 32839)",
@@ -35,7 +43,7 @@
           "done": false
         },
         {
-          "id": "act-004",
+          "id": "act-2026-11-28-tarde",
           "time": "14:00",
           "title": "Tarde — ️ VIAGEM — Chegada em Orlando por volta do meio-dia/início da tarde. Check-in (pedir early check-…",
           "location": "Walmart Supercenter – 8990 Turkey Lake Rd, Orlando, FL 32819 (alternativa: Target Millenia ⭐ – 4750 Millenia Plaza Way, Orlando, FL 32839)",
@@ -43,23 +51,23 @@
           "done": false
         },
         {
-          "id": "act-005",
+          "id": "act-2026-11-28-noite",
           "time": "19:00",
           "title": "Noite — DESCANSO/SONECA — Jantar perto do hotel e dormir cedo.",
           "location": "Walmart Supercenter – 8990 Turkey Lake Rd, Orlando, FL 32819 (alternativa: Target Millenia ⭐ – 4750 Millenia Plaza Way, Orlando, FL 32839)",
           "notes": "😴 DESCANSO/SONECA — Jantar perto do hotel e dormir cedo.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Walmart Supercenter – 8990 Turkey Lake Rd, Orlando, FL 32819 (alternativa: Target Millenia ⭐ – 4750 Millenia Plaza Way, Orlando, FL 32839)\n\n🚗 MIA → hotel: ~4h30 sem trânsito (~377 km); contar 5h–5h30 com paradas. Walmart: ~10 min do hotel.\n\n👶 Criança dorme no carro — planejar a parada principal para depois do cochilo. Paradas nas áreas de serviço da Turnpike. Lei da Flórida exige cadeirinha para menores de 4 anos.\n\n📝 Pedágios: confirmar o programa de pedágio da locadora. Opção B (NÃO recomendada): Sawgrass Mills abre de manhã, mas sábado pós-Black Friday + noite sem dormir com criança = muito desgaste."
+      ]
     },
     {
-      "id": "day-010",
+      "id": "day-2026-11-29",
       "date": "2026-11-29",
       "label": "🛍️ Compras leves + 🎟️ ingressos (Disney Springs)",
+      "dayNotes": "📍 Disney Springs – Lake Buena Vista, FL 32830 (estacionamento grátis) | Disney Ticket Center – Town Center de Disney Springs\n\n🚗 ~20–25 min\n\n👶 Disney Springs é plano e bom para carrinho. Levar a confirmação da compra, o cartão usado e documento com foto para a retirada.\n\n📝 Domingo do fim de semana de Black Friday: Disney Springs lota no fim da tarde — ir logo depois da soneca e voltar cedo. Retirada dos ingressos: o procedimento que encontrei é de 2022; CONFIRMAR no e-mail da compra se o ingresso já está no My Disney Experience (nesse caso não precisa retirar nada) e o horário do Ticket Center.",
       "activities": [
         {
-          "id": "act-007",
+          "id": "act-2026-11-29-manha",
           "time": "09:00",
           "title": "Manhã — DESCANSO/SONECA — Dormir sem despertador, café da manhã sem pressa.",
           "location": "Disney Springs – Lake Buena Vista, FL 32830 (estacionamento grátis)",
@@ -67,7 +75,7 @@
           "done": false
         },
         {
-          "id": "act-008",
+          "id": "act-2026-11-29-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — Soneca no hotel.",
           "location": "Disney Springs – Lake Buena Vista, FL 32830 (estacionamento grátis)",
@@ -75,23 +83,23 @@
           "done": false
         },
         {
-          "id": "act-009",
+          "id": "act-2026-11-29-noite",
           "time": "19:00",
           "title": "Noite — DESCANSO/SONECA — Jantar cedo (Disney Springs ou perto do hotel); preparar a mochila do Magic Kin…",
           "location": "Disney Springs – Lake Buena Vista, FL 32830 (estacionamento grátis)",
           "notes": "😴 DESCANSO/SONECA — Jantar cedo (Disney Springs ou perto do hotel); preparar a mochila do Magic Kingdom.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Disney Springs – Lake Buena Vista, FL 32830 (estacionamento grátis) | Disney Ticket Center – Town Center de Disney Springs\n\n🚗 ~20–25 min\n\n👶 Disney Springs é plano e bom para carrinho. Levar a confirmação da compra, o cartão usado e documento com foto para a retirada.\n\n📝 Domingo do fim de semana de Black Friday: Disney Springs lota no fim da tarde — ir logo depois da soneca e voltar cedo. Retirada dos ingressos: o procedimento que encontrei é de 2022; CONFIRMAR no e-mail da compra se o ingresso já está no My Disney Experience (nesse caso não precisa retirar nada) e o horário do Ticket Center."
+      ]
     },
     {
-      "id": "day-014",
+      "id": "day-2026-11-30",
       "date": "2026-11-30",
       "label": "🎢 Parque",
+      "dayNotes": "📍 Magic Kingdom – estacionamento no Transportation & Ticket Center\n\n🚗 ~25–35 min\n\n👶 Soneca no carrinho dentro do parque ou pausa no meio do dia.\n\n📝 Cyber Monday — bom dia para compras online com entrega no hotel (confirmar se o hotel recebe encomendas).",
       "activities": [
         {
-          "id": "act-011",
+          "id": "act-2026-11-30-manha",
           "time": "09:00",
           "title": "Manhã — PARQUE — ⭐ Magic Kingdom (fixo)",
           "location": "Magic Kingdom – estacionamento no Transportation & Ticket Center",
@@ -99,7 +107,7 @@
           "done": false
         },
         {
-          "id": "act-012",
+          "id": "act-2026-11-30-tarde",
           "time": "14:00",
           "title": "Tarde — PARQUE — ⭐ Magic Kingdom",
           "location": "Magic Kingdom – estacionamento no Transportation & Ticket Center",
@@ -107,23 +115,23 @@
           "done": false
         },
         {
-          "id": "act-013",
+          "id": "act-2026-11-30-noite",
           "time": "19:00",
           "title": "Noite — PARQUE — ⭐ Magic Kingdom",
           "location": "Magic Kingdom – estacionamento no Transportation & Ticket Center",
           "notes": "🎢 PARQUE — ⭐ Magic Kingdom",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Magic Kingdom – estacionamento no Transportation & Ticket Center\n\n🚗 ~25–35 min\n\n👶 Soneca no carrinho dentro do parque ou pausa no meio do dia.\n\n📝 Cyber Monday — bom dia para compras online com entrega no hotel (confirmar se o hotel recebe encomendas)."
+      ]
     },
     {
-      "id": "day-018",
+      "id": "day-2026-12-01",
       "date": "2026-12-01",
       "label": "🛍️ Compras (outlets) + 💄 Beleza",
+      "dayNotes": "📍 Orlando International Premium Outlets – 4951 International Dr, Orlando, FL 32819 | Orlando Outlet Marketplace – 5269 International Dr | Ross – 5295 International Dr | Five Below – 5295 International Dr, Ste 660 | Ulta – 5295 International Blvd, Ste 100-A (todos em Orlando, FL 32819)\n\n🚗 International: ~10–15 min | Outlet Marketplace: ~5–10 min\n\n👶 Leve o seu carrinho (o outlet também aluga em 5 pontos). Carter's Clearance é apertada para carrinho. Soneca no hotel (10 min).\n\n📝 Horário: seg–sáb 10h–21h, dom 11h–19h. O balcão Simon Guest Services do International fecha ter–qua → pegue os cupons antes, online (Simon / Premium Outlets VIP, grátis). Estacionamento é o ponto fraco: chegar na abertura; valet US$15. Terça depois da Cyber Monday tende a ser mais tranquila que o fim de semana.",
       "activities": [
         {
-          "id": "act-015",
+          "id": "act-2026-12-01-manha",
           "time": "09:00",
           "title": "Manhã — ️ COMPRAS — 10h (abertura): Orlando International Premium Outlets. Focos ⭐: Nike Factory, Crocs, …",
           "location": "Orlando International Premium Outlets – 4951 International Dr, Orlando, FL 32819",
@@ -131,7 +139,7 @@
           "done": false
         },
         {
-          "id": "act-016",
+          "id": "act-2026-12-01-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — ~13h volta ao hotel para a soneca.",
           "location": "Orlando International Premium Outlets – 4951 International Dr, Orlando, FL 32819",
@@ -139,23 +147,23 @@
           "done": false
         },
         {
-          "id": "act-017",
+          "id": "act-2026-12-01-noite",
           "time": "19:00",
           "title": "Noite — DESCANSO/SONECA — Jantar na I-Drive.",
           "location": "Orlando International Premium Outlets – 4951 International Dr, Orlando, FL 32819",
           "notes": "😴 DESCANSO/SONECA — Jantar na I-Drive.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Orlando International Premium Outlets – 4951 International Dr, Orlando, FL 32819 | Orlando Outlet Marketplace – 5269 International Dr | Ross – 5295 International Dr | Five Below – 5295 International Dr, Ste 660 | Ulta – 5295 International Blvd, Ste 100-A (todos em Orlando, FL 32819)\n\n🚗 International: ~10–15 min | Outlet Marketplace: ~5–10 min\n\n👶 Leve o seu carrinho (o outlet também aluga em 5 pontos). Carter's Clearance é apertada para carrinho. Soneca no hotel (10 min).\n\n📝 Horário: seg–sáb 10h–21h, dom 11h–19h. O balcão Simon Guest Services do International fecha ter–qua → pegue os cupons antes, online (Simon / Premium Outlets VIP, grátis). Estacionamento é o ponto fraco: chegar na abertura; valet US$15. Terça depois da Cyber Monday tende a ser mais tranquila que o fim de semana."
+      ]
     },
     {
-      "id": "day-022",
+      "id": "day-2026-12-02",
       "date": "2026-12-02",
       "label": "🎢 Parque",
+      "dayNotes": "📍 Disney's Animal Kingdom\n\n🚗 ~25–30 min\n\n👶 Parque abre/fecha mais cedo; bom para a rotina da criança.\n\n📝 Sua planilha sugere Vineland na volta de um parque Disney — com criança cansada não recomendo; Vineland ficou para 11/12.",
       "activities": [
         {
-          "id": "act-019",
+          "id": "act-2026-12-02-manha",
           "time": "09:00",
           "title": "Manhã — PARQUE — ⭐ Animal Kingdom (fixo)",
           "location": "Disney's Animal Kingdom",
@@ -163,7 +171,7 @@
           "done": false
         },
         {
-          "id": "act-020",
+          "id": "act-2026-12-02-tarde",
           "time": "14:00",
           "title": "Tarde — PARQUE — ⭐ Animal Kingdom",
           "location": "Disney's Animal Kingdom",
@@ -171,23 +179,23 @@
           "done": false
         },
         {
-          "id": "act-021",
+          "id": "act-2026-12-02-noite",
           "time": "19:00",
           "title": "Noite — PARQUE — ⭐ Animal Kingdom",
           "location": "Disney's Animal Kingdom",
           "notes": "🎢 PARQUE — ⭐ Animal Kingdom",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Disney's Animal Kingdom\n\n🚗 ~25–30 min\n\n👶 Parque abre/fecha mais cedo; bom para a rotina da criança.\n\n📝 Sua planilha sugere Vineland na volta de um parque Disney — com criança cansada não recomendo; Vineland ficou para 11/12."
+      ]
     },
     {
-      "id": "day-026",
+      "id": "day-2026-12-03",
       "date": "2026-12-03",
       "label": "🎢 Parque",
+      "dayNotes": "📍 Disney's Hollywood Studios\n\n🚗 ~20–30 min",
       "activities": [
         {
-          "id": "act-023",
+          "id": "act-2026-12-03-manha",
           "time": "09:00",
           "title": "Manhã — PARQUE — ⭐ Hollywood Studios (fixo)",
           "location": "Disney's Hollywood Studios",
@@ -195,7 +203,7 @@
           "done": false
         },
         {
-          "id": "act-024",
+          "id": "act-2026-12-03-tarde",
           "time": "14:00",
           "title": "Tarde — PARQUE — ⭐ Hollywood Studios",
           "location": "Disney's Hollywood Studios",
@@ -203,23 +211,23 @@
           "done": false
         },
         {
-          "id": "act-025",
+          "id": "act-2026-12-03-noite",
           "time": "19:00",
           "title": "Noite — PARQUE — ⭐ Hollywood Studios",
           "location": "Disney's Hollywood Studios",
           "notes": "🎢 PARQUE — ⭐ Hollywood Studios",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Disney's Hollywood Studios\n\n🚗 ~20–30 min"
+      ]
     },
     {
-      "id": "day-030",
+      "id": "day-2026-12-04",
       "date": "2026-12-04",
       "label": "🛍️ Compras leves + 🎡 Passeio (ICON Park)",
+      "dayNotes": "📍 Ross – 7603 Turkey Lake Rd, Orlando, FL 32819 | Walmart – 8990 Turkey Lake Rd, Orlando, FL 32819 | ICON Park – 8375 International Dr, Orlando, FL 32819\n\n🚗 Ross / Walmart: ~5–10 min | ICON Park: ~5 min\n\n👶 The Wheel é uma cabine fechada de ~20 min: se a criança estiver agitada, o carrossel e o playground são o plano B. Confirmar no site do ICON Park a regra/preço de ingresso para criança de 2 anos antes de comprar.\n\n📝 Interpretei \"Interpark\" como ICON Park (I-Drive). The Wheel a partir de US$29,99 por adulto (preço de referência; confirmar). Horários do ICON Park não confirmados — ver no site no dia. A Crayola saiu deste dia e virou opcional no sábado (05/12).",
       "activities": [
         {
-          "id": "act-027",
+          "id": "act-2026-12-04-manha",
           "time": "09:00",
           "title": "Manhã — ️ COMPRAS — ~10h30, sem pressa: Ross Dress for Less Turkey Lake ⭐ (4,4★) — roupa e infantil off-p…",
           "location": "Ross – 7603 Turkey Lake Rd, Orlando, FL 32819",
@@ -227,7 +235,7 @@
           "done": false
         },
         {
-          "id": "act-028",
+          "id": "act-2026-12-04-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — Almoço perto do hotel e soneca (~13h).",
           "location": "Ross – 7603 Turkey Lake Rd, Orlando, FL 32819",
@@ -235,23 +243,23 @@
           "done": false
         },
         {
-          "id": "act-029",
+          "id": "act-2026-12-04-noite",
           "time": "19:00",
           "title": "Noite — PASSEIO — Jantar perto do ICON Park e volta cedo — dia leve depois de dois parques seguidos.",
           "location": "Ross – 7603 Turkey Lake Rd, Orlando, FL 32819",
           "notes": "🎡 PASSEIO — Jantar perto do ICON Park e volta cedo — dia leve depois de dois parques seguidos.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Ross – 7603 Turkey Lake Rd, Orlando, FL 32819 | Walmart – 8990 Turkey Lake Rd, Orlando, FL 32819 | ICON Park – 8375 International Dr, Orlando, FL 32819\n\n🚗 Ross / Walmart: ~5–10 min | ICON Park: ~5 min\n\n👶 The Wheel é uma cabine fechada de ~20 min: se a criança estiver agitada, o carrossel e o playground são o plano B. Confirmar no site do ICON Park a regra/preço de ingresso para criança de 2 anos antes de comprar.\n\n📝 Interpretei \"Interpark\" como ICON Park (I-Drive). The Wheel a partir de US$29,99 por adulto (preço de referência; confirmar). Horários do ICON Park não confirmados — ver no site no dia. A Crayola saiu deste dia e virou opcional no sábado (05/12)."
+      ]
     },
     {
-      "id": "day-034",
+      "id": "day-2026-12-05",
       "date": "2026-12-05",
       "label": "🎡 Passeio (Play Park) + 🛍️ Compras — Florida Mall",
+      "dayNotes": "📍 The Florida Mall (Play Park, Crayola) – 8001 S Orange Blossom Trl, Orlando, FL 32809 | Burlington – 8204 S Orange Blossom Trl | Best Buy – 8350 S Orange Blossom Trl | Celebration Town Center – Market St, Celebration, FL 34747\n\n🚗 Florida Mall: ~10–15 min | Celebration: ~25–30 min\n\n👶 Florida Mall tem aluguel de carrinho, banheiros família e fraldário no Dining Pavilion. Ver a neve das 18h e voltar — a festa é amanhã.\n\n📝 Florida Mall no sábado: seg–qui 10h–20h, sex–sáb 10h–21h — chegar na abertura, o shopping lota depois. Gatorland saiu do roteiro (continua na aba \"Lugares com criança\").",
       "activities": [
         {
-          "id": "act-031",
+          "id": "act-2026-12-05-manha",
           "time": "09:00",
           "title": "Manhã — PASSEIO — 10h (abertura): Florida Mall — Play Park (parquinho coberto grátis) para gastar energia…",
           "location": "The Florida Mall (Play Park, Crayola) – 8001 S Orange Blossom Trl, Orlando, FL 32809",
@@ -259,7 +267,7 @@
           "done": false
         },
         {
-          "id": "act-032",
+          "id": "act-2026-12-05-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — Almoço no Dining Pavilion. Soneca (no carrinho ou no hotel, ~10–15 min).",
           "location": "The Florida Mall (Play Park, Crayola) – 8001 S Orange Blossom Trl, Orlando, FL 32809",
@@ -267,23 +275,23 @@
           "done": false
         },
         {
-          "id": "act-033",
+          "id": "act-2026-12-05-noite",
           "time": "19:00",
           "title": "Noite — PASSEIO — Opcional: 'Now Snowing' no Celebration Town Center — neve artificial grátis às 18h (rep…",
           "location": "The Florida Mall (Play Park, Crayola) – 8001 S Orange Blossom Trl, Orlando, FL 32809",
           "notes": "🎡 PASSEIO — Opcional: 'Now Snowing' no Celebration Town Center — neve artificial grátis às 18h (repete 19h, 20h, 21h). Jantar cedo em Celebration e volta.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 The Florida Mall (Play Park, Crayola) – 8001 S Orange Blossom Trl, Orlando, FL 32809 | Burlington – 8204 S Orange Blossom Trl | Best Buy – 8350 S Orange Blossom Trl | Celebration Town Center – Market St, Celebration, FL 34747\n\n🚗 Florida Mall: ~10–15 min | Celebration: ~25–30 min\n\n👶 Florida Mall tem aluguel de carrinho, banheiros família e fraldário no Dining Pavilion. Ver a neve das 18h e voltar — a festa é amanhã.\n\n📝 Florida Mall no sábado: seg–qui 10h–20h, sex–sáb 10h–21h — chegar na abertura, o shopping lota depois. Gatorland saiu do roteiro (continua na aba \"Lugares com criança\")."
+      ]
     },
     {
-      "id": "day-038",
+      "id": "day-2026-12-06",
       "date": "2026-12-06",
       "label": "🎢 Parque (festa)",
+      "dayNotes": "📍 Magic Kingdom\n\n🚗 ~25–35 min\n\n👶 Pijama no carro para a volta; casaco leve (noites de dezembro podem esfriar); capa de chuva para o carrinho.\n\n📝 Fixo.",
       "activities": [
         {
-          "id": "act-035",
+          "id": "act-2026-12-06-manha",
           "time": "09:00",
           "title": "Manhã — DESCANSO/SONECA — Dormir até mais tarde; almoço cedo.",
           "location": "Magic Kingdom",
@@ -291,7 +299,7 @@
           "done": false
         },
         {
-          "id": "act-036",
+          "id": "act-2026-12-06-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — Soneca longa ANTES da festa (13h–15h).",
           "location": "Magic Kingdom",
@@ -299,23 +307,23 @@
           "done": false
         },
         {
-          "id": "act-037",
+          "id": "act-2026-12-06-noite",
           "time": "19:00",
           "title": "Noite — PARQUE — ⭐ Festa no Magic Kingdom (termina tarde).",
           "location": "Magic Kingdom",
           "notes": "🎢 PARQUE — ⭐ Festa no Magic Kingdom (termina tarde).",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Magic Kingdom\n\n🚗 ~25–35 min\n\n👶 Pijama no carro para a volta; casaco leve (noites de dezembro podem esfriar); capa de chuva para o carrinho.\n\n📝 Fixo."
+      ]
     },
     {
-      "id": "day-042",
+      "id": "day-2026-12-07",
       "date": "2026-12-07",
       "label": "😴 Descanso",
+      "dayNotes": "📍 Harry P. Leu Gardens – 1920 N Forest Ave, Orlando, FL 32803 | Walmart – 8990 Turkey Lake Rd, Orlando, FL 32819\n\n🚗 Leu Gardens: ~25 min | Walmart: ~10 min\n\n👶 Dia de recuperação pós-festa: sem horário, sem compromisso.\n\n📝 Leu Gardens: 9h–16h (última entrada 15h) nesta época; dia grátis pode lotar. Atenção: os barcos-cisne do Lake Eola NÃO funcionam às segundas.",
       "activities": [
         {
-          "id": "act-039",
+          "id": "act-2026-12-07-manha",
           "time": "09:00",
           "title": "Manhã — DESCANSO/SONECA — Dormir sem despertador, sem horário.",
           "location": "Harry P. Leu Gardens – 1920 N Forest Ave, Orlando, FL 32803",
@@ -323,7 +331,7 @@
           "done": false
         },
         {
-          "id": "act-040",
+          "id": "act-2026-12-07-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — Soneca.",
           "location": "Harry P. Leu Gardens – 1920 N Forest Ave, Orlando, FL 32803",
@@ -331,23 +339,23 @@
           "done": false
         },
         {
-          "id": "act-041",
+          "id": "act-2026-12-07-noite",
           "time": "19:00",
           "title": "Noite — DESCANSO/SONECA — Jantar cedo perto do hotel.",
           "location": "Harry P. Leu Gardens – 1920 N Forest Ave, Orlando, FL 32803",
           "notes": "😴 DESCANSO/SONECA — Jantar cedo perto do hotel.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Harry P. Leu Gardens – 1920 N Forest Ave, Orlando, FL 32803 | Walmart – 8990 Turkey Lake Rd, Orlando, FL 32819\n\n🚗 Leu Gardens: ~25 min | Walmart: ~10 min\n\n👶 Dia de recuperação pós-festa: sem horário, sem compromisso.\n\n📝 Leu Gardens: 9h–16h (última entrada 15h) nesta época; dia grátis pode lotar. Atenção: os barcos-cisne do Lake Eola NÃO funcionam às segundas."
+      ]
     },
     {
-      "id": "day-046",
+      "id": "day-2026-12-08",
       "date": "2026-12-08",
       "label": "🛍️ Compras + 🛒 Mercado + 💄 Beleza",
+      "dayNotes": "📍 Target – 4750 Millenia Plaza Way | Best Buy – 4155 Millenia Blvd | Ross – 4661 Millenia Plaza Way | Marshalls – 4648 Millenia Plaza Way | Ulta – 4600 Millenia Plaza Way Ste 11 | The Mall at Millenia – 4200 Conroy Rd | Nordstrom Rack – 4036 Eastgate Dr, Orlando, FL 32839 (todos em Orlando, FL 32839)\n\n🚗 ~10–15 min (Nordstrom Rack: ~10 min, estimativa)\n\n👶 Tudo perto: dá para fazer só a parte da manhã e voltar. Target tem banheiro e lanches para a criança.\n\n📝 Mall at Millenia: seg–sex 11h–21h, sáb 10h–21h, dom 11h–19h (horário de feriado 2026 ainda não publicado). Target e Best Buy: conferir o horário no app. Nordstrom Rack Eastgate: seg–sáb 10h–21h, dom 11h–19h; loja menor que a média, e reviews alertam para devolução rígida (compre o que for ficar).",
       "activities": [
         {
-          "id": "act-043",
+          "id": "act-2026-12-08-manha",
           "time": "09:00",
           "title": "Manhã — MERCADO — 9h30: Millenia Plaza — Target Millenia ⭐ (mercado enorme, merch Disney).",
           "location": "Target – 4750 Millenia Plaza Way",
@@ -355,7 +363,7 @@
           "done": false
         },
         {
-          "id": "act-044",
+          "id": "act-2026-12-08-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — ~13h30 volta ao hotel para a soneca.",
           "location": "Target – 4750 Millenia Plaza Way",
@@ -363,23 +371,23 @@
           "done": false
         },
         {
-          "id": "act-045",
+          "id": "act-2026-12-08-noite",
           "time": "19:00",
           "title": "Noite — DESCANSO/SONECA — Livre; preparar o dia do Epic Universe.",
           "location": "Target – 4750 Millenia Plaza Way",
           "notes": "😴 DESCANSO/SONECA — Livre; preparar o dia do Epic Universe.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Target – 4750 Millenia Plaza Way | Best Buy – 4155 Millenia Blvd | Ross – 4661 Millenia Plaza Way | Marshalls – 4648 Millenia Plaza Way | Ulta – 4600 Millenia Plaza Way Ste 11 | The Mall at Millenia – 4200 Conroy Rd | Nordstrom Rack – 4036 Eastgate Dr, Orlando, FL 32839 (todos em Orlando, FL 32839)\n\n🚗 ~10–15 min (Nordstrom Rack: ~10 min, estimativa)\n\n👶 Tudo perto: dá para fazer só a parte da manhã e voltar. Target tem banheiro e lanches para a criança.\n\n📝 Mall at Millenia: seg–sex 11h–21h, sáb 10h–21h, dom 11h–19h (horário de feriado 2026 ainda não publicado). Target e Best Buy: conferir o horário no app. Nordstrom Rack Eastgate: seg–sáb 10h–21h, dom 11h–19h; loja menor que a média, e reviews alertam para devolução rígida (compre o que for ficar)."
+      ]
     },
     {
-      "id": "day-050",
+      "id": "day-2026-12-09",
       "date": "2026-12-09",
       "label": "🎢 Parque",
+      "dayNotes": "📍 Epic Universe – Orlando, FL\n\n🚗 ~5–10 min\n\n👶 Muito perto do hotel: dá para voltar para a soneca e retornar.",
       "activities": [
         {
-          "id": "act-047",
+          "id": "act-2026-12-09-manha",
           "time": "09:00",
           "title": "Manhã — PARQUE — ⭐ Epic Universe (fixo)",
           "location": "Epic Universe – Orlando, FL",
@@ -387,7 +395,7 @@
           "done": false
         },
         {
-          "id": "act-048",
+          "id": "act-2026-12-09-tarde",
           "time": "14:00",
           "title": "Tarde — PARQUE — ⭐ Epic Universe",
           "location": "Epic Universe – Orlando, FL",
@@ -395,23 +403,23 @@
           "done": false
         },
         {
-          "id": "act-049",
+          "id": "act-2026-12-09-noite",
           "time": "19:00",
           "title": "Noite — PARQUE — ⭐ Epic Universe",
           "location": "Epic Universe – Orlando, FL",
           "notes": "🎢 PARQUE — ⭐ Epic Universe",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Epic Universe – Orlando, FL\n\n🚗 ~5–10 min\n\n👶 Muito perto do hotel: dá para voltar para a soneca e retornar."
+      ]
     },
     {
-      "id": "day-054",
+      "id": "day-2026-12-10",
       "date": "2026-12-10",
       "label": "🥞 Refeição especial (Chef Mickey's) + 🎡 Passeio + 🛍️ Compras leves",
+      "dayNotes": "📍 Disney's Contemporary Resort – 4600 N World Dr, Lake Buena Vista, FL 32830 | Disney Springs – Lake Buena Vista, FL 32830 (estacionamento grátis)\n\n🚗 Contemporary: ~25–35 min | Disney Springs: ~20–25 min\n\n👶 Chef Mickey's: menores de 3 anos não pagam (confirmar na reserva). Deixar a soneca no hotel entre as duas partes do dia. Custo estimado para vocês: ~US$147–150 (2 adultos + criança grátis); detalhes na aba \"Chef Mickey's (custos)\".\n\n📝 RESERVA: Disney libera reservas de restaurante 60 dias antes → para 10/12 isso é 11/10/2026 (AMANHÃ em relação a 10/10). Estacionamento no Contemporary: as fontes que achei dizem que é grátis com reserva de restaurante confirmada (mostrar a confirmação no portão), mas uma delas menciona tarifa de parque para visitantes — CONFIRMAR antes. Alternativa: Cape May Cafe (Beach Club) + carrossel de gingerbread. O Grand Floridian NÃO terá a casa gigante de gingerbread em 2026 (aposentada).",
       "activities": [
         {
-          "id": "act-051",
+          "id": "act-2026-12-10-manha",
           "time": "09:00",
           "title": "Manhã — REFEIÇÃO ESPECIAL — Café da manhã com personagens no Chef Mickey's (Disney's Contemporary Resort)…",
           "location": "Disney's Contemporary Resort – 4600 N World Dr, Lake Buena Vista, FL 32830",
@@ -419,7 +427,7 @@
           "done": false
         },
         {
-          "id": "act-052",
+          "id": "act-2026-12-10-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — Volta ao hotel ~13h para a soneca.",
           "location": "Disney's Contemporary Resort – 4600 N World Dr, Lake Buena Vista, FL 32830",
@@ -427,23 +435,23 @@
           "done": false
         },
         {
-          "id": "act-053",
+          "id": "act-2026-12-10-noite",
           "time": "19:00",
           "title": "Noite — PASSEIO — Jantar em Disney Springs; neve noturna no Town Center; volta.",
           "location": "Disney's Contemporary Resort – 4600 N World Dr, Lake Buena Vista, FL 32830",
           "notes": "🎡 PASSEIO — Jantar em Disney Springs; neve noturna no Town Center; volta.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Disney's Contemporary Resort – 4600 N World Dr, Lake Buena Vista, FL 32830 | Disney Springs – Lake Buena Vista, FL 32830 (estacionamento grátis)\n\n🚗 Contemporary: ~25–35 min | Disney Springs: ~20–25 min\n\n👶 Chef Mickey's: menores de 3 anos não pagam (confirmar na reserva). Deixar a soneca no hotel entre as duas partes do dia. Custo estimado para vocês: ~US$147–150 (2 adultos + criança grátis); detalhes na aba \"Chef Mickey's (custos)\".\n\n📝 RESERVA: Disney libera reservas de restaurante 60 dias antes → para 10/12 isso é 11/10/2026 (AMANHÃ em relação a 10/10). Estacionamento no Contemporary: as fontes que achei dizem que é grátis com reserva de restaurante confirmada (mostrar a confirmação no portão), mas uma delas menciona tarifa de parque para visitantes — CONFIRMAR antes. Alternativa: Cape May Cafe (Beach Club) + carrossel de gingerbread. O Grand Floridian NÃO terá a casa gigante de gingerbread em 2026 (aposentada)."
+      ]
     },
     {
-      "id": "day-058",
+      "id": "day-2026-12-11",
       "date": "2026-12-11",
       "label": "🛍️ Compras (outlets)",
+      "dayNotes": "📍 Orlando Vineland Premium Outlets – 8200 Vineland Ave, Orlando, FL 32821 | Lake Buena Vista Factory Stores – 15657 State Rd 535, Orlando, FL 32821 | Walmart – 3250 Vineland Rd, Kissimmee, FL 34746\n\n🚗 Vineland: ~15–20 min | LBV Factory Stores: ~15–20 min\n\n👶 Vagas para famílias com crianças pequenas na entrada da adidas e no Promenade. Aluguel de carrinho disponível.\n\n📝 Domingo 11h–19h; seg–sáb: conferir no site. Sexta é bem melhor que sábado para a Character Warehouse.",
       "activities": [
         {
-          "id": "act-055",
+          "id": "act-2026-12-11-manha",
           "time": "09:00",
           "title": "Manhã — ️ COMPRAS — Chegar 9h30 (antes de abrir): Orlando Vineland Premium Outlets — Character Warehouse …",
           "location": "Orlando Vineland Premium Outlets – 8200 Vineland Ave, Orlando, FL 32821",
@@ -451,7 +459,7 @@
           "done": false
         },
         {
-          "id": "act-056",
+          "id": "act-2026-12-11-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — Soneca no hotel (~15 min).",
           "location": "Orlando Vineland Premium Outlets – 8200 Vineland Ave, Orlando, FL 32821",
@@ -459,23 +467,23 @@
           "done": false
         },
         {
-          "id": "act-057",
+          "id": "act-2026-12-11-noite",
           "time": "19:00",
           "title": "Noite — DESCANSO/SONECA — Livre.",
           "location": "Orlando Vineland Premium Outlets – 8200 Vineland Ave, Orlando, FL 32821",
           "notes": "😴 DESCANSO/SONECA — Livre.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Orlando Vineland Premium Outlets – 8200 Vineland Ave, Orlando, FL 32821 | Lake Buena Vista Factory Stores – 15657 State Rd 535, Orlando, FL 32821 | Walmart – 3250 Vineland Rd, Kissimmee, FL 34746\n\n🚗 Vineland: ~15–20 min | LBV Factory Stores: ~15–20 min\n\n👶 Vagas para famílias com crianças pequenas na entrada da adidas e no Promenade. Aluguel de carrinho disponível.\n\n📝 Domingo 11h–19h; seg–sáb: conferir no site. Sexta é bem melhor que sábado para a Character Warehouse."
+      ]
     },
     {
-      "id": "day-062",
+      "id": "day-2026-12-12",
       "date": "2026-12-12",
       "label": "💄 Beleza + 🎡 Passeio (Winter Garden) + 🛍️ Compras finais",
+      "dayNotes": "📍 Beauty Master – 7175 W Colonial Dr, Orlando, FL 32818 | Winter Garden Farmers Market – 104 S Lakeview Ave, Winter Garden, FL 34787 | Plant St. Market – 426 W Plant St, Winter Garden, FL 34787 | T.J. Maxx – 6716 Grand National Dr | Burlington – 6870 Grand National Dr | Walmart – 8990 Turkey Lake Rd (Orlando, FL 32819)\n\n🚗 Beauty Master: ~20 min | Winter Garden: ~25–30 min (estimativa) | Grand National / Walmart: ~5–10 min\n\n👶 Centro de Winter Garden é plano e bom para carrinho. Se a criança dormir no carro na ida, deixe o Beauty Master para a volta, em vez de acordá-la.\n\n📝 Farmers Market: sábado 8h–13h (dado do Google; confirmar no site da cidade, wgfl.gov). Beauty Master é uma loja grande de beleza com seção de K-beauty (não só coreana); reviews são mistos sobre atendimento. Os barcos-cisne do Lake Eola saíram do roteiro. Winter Garden Village (Marshalls, Target etc.) fica como opção se sobrar pique.",
       "activities": [
         {
-          "id": "act-059",
+          "id": "act-2026-12-12-manha",
           "time": "09:00",
           "title": "Manhã — BELEZA — 9h (abertura): Beauty Master W Colonial ⭐ (7175 W Colonial Dr; 4,6★, 743 avaliações) — n…",
           "location": "Beauty Master – 7175 W Colonial Dr, Orlando, FL 32818",
@@ -483,7 +491,7 @@
           "done": false
         },
         {
-          "id": "act-060",
+          "id": "act-2026-12-12-tarde",
           "time": "14:00",
           "title": "Tarde — DESCANSO/SONECA — ~13h30 volta ao hotel (~25–30 min) para a soneca.",
           "location": "Beauty Master – 7175 W Colonial Dr, Orlando, FL 32818",
@@ -491,23 +499,23 @@
           "done": false
         },
         {
-          "id": "act-061",
+          "id": "act-2026-12-12-noite",
           "time": "19:00",
           "title": "Noite — DESCANSO/SONECA — Jantar de despedida perto do hotel; arrumar e pesar as malas; dormir cedo.",
           "location": "Beauty Master – 7175 W Colonial Dr, Orlando, FL 32818",
           "notes": "😴 DESCANSO/SONECA — Jantar de despedida perto do hotel; arrumar e pesar as malas; dormir cedo.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Beauty Master – 7175 W Colonial Dr, Orlando, FL 32818 | Winter Garden Farmers Market – 104 S Lakeview Ave, Winter Garden, FL 34787 | Plant St. Market – 426 W Plant St, Winter Garden, FL 34787 | T.J. Maxx – 6716 Grand National Dr | Burlington – 6870 Grand National Dr | Walmart – 8990 Turkey Lake Rd (Orlando, FL 32819)\n\n🚗 Beauty Master: ~20 min | Winter Garden: ~25–30 min (estimativa) | Grand National / Walmart: ~5–10 min\n\n👶 Centro de Winter Garden é plano e bom para carrinho. Se a criança dormir no carro na ida, deixe o Beauty Master para a volta, em vez de acordá-la.\n\n📝 Farmers Market: sábado 8h–13h (dado do Google; confirmar no site da cidade, wgfl.gov). Beauty Master é uma loja grande de beleza com seção de K-beauty (não só coreana); reviews são mistos sobre atendimento. Os barcos-cisne do Lake Eola saíram do roteiro. Winter Garden Village (Marshalls, Target etc.) fica como opção se sobrar pique."
+      ]
     },
     {
-      "id": "day-066",
+      "id": "day-2026-12-13",
       "date": "2026-12-13",
       "label": "✈️ Viagem",
+      "dayNotes": "📍 Miami International Airport (MIA)\n\n🚗 Hotel → MIA: ~4h30 sem trânsito (~377 km), mais as paradas\n\n👶 Criança dorme no carro; almoço numa área de serviço da Turnpike.\n\n📝 Saindo ao meio-dia, a chegada ao MIA fica por volta de 16h30–17h30 SEM paradas, e para voo internacional o ideal é chegar 3h antes (~16h50). Ou seja: já fica apertado. Sawgrass Mills (43 min do MIA) ou Dolphin Mall (18 min do MIA) NÃO cabem saindo às 12h. Só cabem saindo de Orlando por volta de 6h30–7h (os dois abrem às 11h no domingo), com compras até ~14h30.",
       "activities": [
         {
-          "id": "act-063",
+          "id": "act-2026-12-13-manha",
           "time": "09:00",
           "title": "Manhã — ️ VIAGEM — RECOMENDO sair às 9h–10h (e não ao meio-dia).",
           "location": "Miami International Airport (MIA)",
@@ -515,7 +523,7 @@
           "done": false
         },
         {
-          "id": "act-064",
+          "id": "act-2026-12-13-tarde",
           "time": "14:00",
           "title": "Tarde — ️ VIAGEM — Viagem Orlando → Miami (Turnpike). Devolução do carro no Rental Car Center do MIA + MI…",
           "location": "Miami International Airport (MIA)",
@@ -523,31 +531,30 @@
           "done": false
         },
         {
-          "id": "act-065",
+          "id": "act-2026-12-13-noite",
           "time": "19:00",
           "title": "Noite — ️ VIAGEM — Voo às 19:50.",
           "location": "Miami International Airport (MIA)",
           "notes": "✈️ VIAGEM — Voo às 19:50.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 Miami International Airport (MIA)\n\n🚗 Hotel → MIA: ~4h30 sem trânsito (~377 km), mais as paradas\n\n👶 Criança dorme no carro; almoço numa área de serviço da Turnpike.\n\n📝 Saindo ao meio-dia, a chegada ao MIA fica por volta de 16h30–17h30 SEM paradas, e para voo internacional o ideal é chegar 3h antes (~16h50). Ou seja: já fica apertado. Sawgrass Mills (43 min do MIA) ou Dolphin Mall (18 min do MIA) NÃO cabem saindo às 12h. Só cabem saindo de Orlando por volta de 6h30–7h (os dois abrem às 11h no domingo), com compras até ~14h30."
+      ]
     },
     {
-      "id": "day-068",
+      "id": "day-2026-12-14",
       "date": "2026-12-14",
       "label": "✈️ Viagem",
+      "dayNotes": "📍 GIG",
       "activities": [
         {
-          "id": "act-067",
+          "id": "act-2026-12-14-manha",
           "time": "09:00",
           "title": "Manhã — ️ VIAGEM — Chegada no Rio às 06:15.",
           "location": "GIG",
           "notes": "✈️ VIAGEM — Chegada no Rio às 06:15.",
           "done": false
         }
-      ],
-      "dayNotes": "📍 GIG"
+      ]
     }
   ],
   "expenses": [],
@@ -592,12 +599,5 @@
       "tema": "Premissas desta versão",
       "texto": "\"Interpark\" foi interpretado como ICON Park. Disney Springs aparece em 29/11 e 10/12 (propositalmente: uma vez p/ ingressos+compras, outra p/ Natal). Best Buy aparece no Florida Mall (05/12) e no Millenia (08/12): vá só a um, o que tiver o produto. Tempos de carro novos são estimativas. A loja coreana é a Beauty Master (W Colonial); a moida K-Beauty saiu. Nordstrom Rack: só a de Eastgate (08/12); a de Winter Park é longe demais."
     }
-  ],
-  "budgetLimits": {
-    "marcos": 5000,
-    "dielen": 5000,
-    "helena": 5000,
-    "alimentacao": 5000,
-    "outros": 5000
-  }
+  ]
 }
