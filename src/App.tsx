@@ -61,8 +61,10 @@ export default function App() {
             className={`tab-bar__btn ${tab === id ? 'tab-bar__btn--active' : ''}`}
             onClick={() => setTab(id)}
             aria-current={tab === id ? 'page' : undefined}
+            aria-label={label}
+            data-tab={id}
           >
-            <Icon size={20} strokeWidth={tab === id ? 2.25 : 1.75} />
+            <Icon size={20} strokeWidth={tab === id ? 2.25 : 1.75} aria-hidden />
             <span>{label}</span>
           </button>
         ))}

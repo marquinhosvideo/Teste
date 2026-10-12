@@ -659,7 +659,16 @@
   border-radius: 12px;
   font-size: 0.72rem;
   font-weight: 650;
-  padding: 6px 4px;
+  padding: 8px 4px;
+  min-height: 56px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-bar__btn svg {
+  pointer-events: none;
 }
 
 .tab-bar__btn--active {
