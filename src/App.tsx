@@ -8,6 +8,7 @@ import { AuthScreen } from './components/AuthScreen'
 import { BudgetWidgets } from './components/BudgetWidgets'
 import { SetupBanner } from './components/SetupBanner'
 import { SyncBadge } from './components/SyncBadge'
+import { UpdatePasswordScreen } from './components/UpdatePasswordScreen'
 import { TodayView } from './views/TodayView'
 import { ItineraryView } from './views/ItineraryView'
 import { ExpensesView } from './views/ExpensesView'
@@ -56,6 +57,17 @@ export default function App() {
           error={auth.error}
           onSignIn={auth.signIn}
           onSignUp={auth.signUp}
+        />
+      </div>
+    )
+  }
+
+  if (isSupabaseConfigured && auth.session && auth.needsPasswordReset) {
+    return (
+      <div className="app-shell">
+        <UpdatePasswordScreen
+          email={auth.user?.email}
+          onSubmit={auth.updatePassword}
         />
       </div>
     )

@@ -8,6 +8,7 @@ type AuthState = {
   session: Session | null
   user: User | null
   error: string | null
+  needsPasswordReset: boolean
 }
 
 const DENIED = 'Este e-mail não está autorizado. Peça ao administrador da viagem.'
@@ -42,11 +43,17 @@ function friendlyAuthError(err: unknown): string {
   if (lower.includes('invalid login') || lower.includes('invalid credentials')) {
     return 'E-mail ou senha incorretos.'
   }
-  // evita reprocessar mensagem já traduzida
   if (message.startsWith('Não consegui falar') || message.startsWith('Este e-mail já')) {
     return message
   }
   return message
+}
+
+function urlLooksLikeRecovery(): boolean {
+  if (typeof window === 'undefined') return false
+  const hash = window.location.hash.toLowerCase()
+  const search = window.location.search.toLowerCase()
+  return hash.includes('type=recovery') || search.includes('type=recovery')
 }
 
 export function useAuth() {
@@ -55,6 +62,7 @@ export function useAuth() {
     session: null,
     user: null,
     error: null,
+    needsPasswordReset: false,
   })
 
   useEffect(() => {
@@ -62,7 +70,7 @@ export function useAuth() {
 
     let mounted = true
 
-    async function applySession(session: Session | null) {
+    async function applySession(session: Session | null, recovery = false) {
       if (!mounted) return
       const email = session?.user?.email ?? ''
       if (session && email && !isEmailAllowed(email)) {
@@ -72,23 +80,26 @@ export function useAuth() {
           session: null,
           user: null,
           error: DENIED,
+          needsPasswordReset: false,
         })
         return
       }
-      setState({
+      setState((prev) => ({
         ready: true,
         session,
         user: session?.user ?? null,
         error: null,
-      })
+        needsPasswordReset: recovery || (Boolean(session) && prev.needsPasswordReset),
+      }))
     }
 
     void supabase.auth.getSession().then(({ data }) => {
-      void applySession(data.session)
+      void applySession(data.session, urlLooksLikeRecovery())
     })
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      void applySession(session)
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      const recovery = event === 'PASSWORD_RECOVERY' || urlLooksLikeRecovery()
+      void applySession(session, recovery)
     })
 
     return () => {
@@ -137,9 +148,21 @@ export function useAuth() {
     }
   }, [])
 
+  const updatePassword = useCallback(async (password: string) => {
+    if (!supabase) throw new Error('Supabase não configurado')
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) throw new Error(friendlyAuthError(error))
+    // limpa o hash do recovery da URL
+    if (typeof window !== 'undefined') {
+      window.history.replaceState({}, document.title, window.location.pathname)
+    }
+    setState((p) => ({ ...p, needsPasswordReset: false, error: null }))
+  }, [])
+
   const signOut = useCallback(async () => {
     if (!supabase) return
     await supabase.auth.signOut()
+    setState((p) => ({ ...p, needsPasswordReset: false }))
   }, [])
 
   return {
@@ -148,8 +171,10 @@ export function useAuth() {
     session: state.session,
     user: state.user,
     error: state.error,
+    needsPasswordReset: state.needsPasswordReset,
     signIn,
     signUp,
+    updatePassword,
     signOut,
   }
 }

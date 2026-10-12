@@ -282,8 +282,36 @@ O texto do roteiro (Manhã/Tarde/Noite) continua no app / Excel. Só o **estado 
 
 ---
 
+## Redirect de recovery / Site URL
+
+O e-mail de “Recovery password” usa a **Site URL** do Supabase. Por padrão costuma ser `http://localhost:3000`, mas o Vite deste projeto roda em **`http://localhost:5173`**.
+
+### Ajuste no Supabase
+
+1. **Authentication** → **URL Configuration** (ou **Settings → Authentication**).
+2. **Site URL:** `http://localhost:5173`
+3. Em **Redirect URLs**, adicione:
+   - `http://localhost:5173/**`
+   - (depois, no deploy) `https://seu-site.vercel.app/**`
+4. Salve.
+
+### Jeito mais rápido de definir senha (sem e-mail)
+
+1. Supabase → **Authentication → Users**
+2. Abra o usuário
+3. Defina **Password** manualmente e salve
+4. No app, use **Entrar** com e-mail + essa senha
+
+### Se o link abriu em localhost:3000
+
+1. Com `npm run dev` rodando, troque na barra do navegador só a porta:  
+   `http://localhost:3000/#access_token=...` → `http://localhost:5173/#access_token=...`  
+   (mantenha o `#access_token=...` inteiro)
+2. O app abre a tela **Nova senha**.
+
 ## Segurança (resumo)
 
 - **Pode** ir no frontend / Vercel: `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`
 - **Nunca** no GitHub nem no site: senha do banco, chave `service_role`
 - O arquivo `.env` local **não** deve ser commitado (já está ignorado)
+- Não compartilhe links de recovery (contêm token de acesso)
