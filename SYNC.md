@@ -43,14 +43,48 @@ Este guia liga o banco (checks e gastos) ao app do repositório
 3. **Desative** a opção **Confirm email** (importante: senão o primeiro login fica bloqueado até confirmar o e-mail).
 4. Salve.
 
-### 5. Copiar as chaves da API
+### 5. Copiar a URL e a chave da API (detalhado)
 
-1. Vá em **Project Settings** (ícone de engrenagem) → **API**.
-2. Anote:
-   - **Project URL** → algo como `https://xxxx.supabase.co`
-   - **anon public** key → chave longa (começa com `eyJ...`)
+O menu do Supabase mudou. **Não existe mais** só “Settings → API” em todos os projetos. Use um destes caminhos:
 
-> Use só a chave **anon**. Nunca coloque a **service_role** no frontend nem no GitHub público.
+#### Caminho A — botão Connect (mais fácil)
+
+1. Com o **projeto aberto** (não na lista de organizações).
+2. No topo da página do projeto, procure o botão **Connect** (às vezes ao lado do nome do projeto).
+3. Abra o diálogo **Connect**.
+4. Se pedir framework, escolha **Vite** ou **App Frameworks** / **React**.
+5. Você verá algo como:
+   - `VITE_SUPABASE_URL=https://abcdefgh.supabase.co`
+   - `VITE_SUPABASE_ANON_KEY=...` **ou** `VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...`
+6. Copie os dois valores (URL + chave pública).
+
+#### Caminho B — Settings → API Keys
+
+1. No menu da **esquerda**, role até o fim e clique na **engrenagem** **Project Settings**.
+2. No submenu de Settings, clique em **API Keys**  
+   (em alguns projetos ainda aparece **API**; nos novos é **API Keys**).
+3. Há abas, por exemplo:
+   - **Publishable and secret API keys** (novo), ou
+   - **Legacy API keys** (`anon` / `service_role`)
+4. Copie a chave **pública**:
+   - Preferência: **publishable** (`sb_publishable_...`), **ou**
+   - Legado: **anon** / **anon public** (JWT longo começando com `eyJ...`)
+5. A **URL do projeto** pode estar:
+   - no mesmo diálogo **Connect**, ou
+   - em **Integrations → Data API**, ou
+   - no formato `https://<ref-do-projeto>.supabase.co`  
+     O `<ref>` é o id curto do projeto (também aparece na URL do browser:  
+     `https://supabase.com/dashboard/project/abcdefgh` → URL = `https://abcdefgh.supabase.co`).
+
+#### O que NÃO copiar
+
+| Pode usar no app | Nunca use no frontend / GitHub |
+| --- | --- |
+| URL `https://xxxx.supabase.co` | Senha do banco (Database password) |
+| Chave **anon** ou **publishable** | Chave **service_role** ou **secret** (`sb_secret_...`) |
+
+No `.env` do nosso app, a chave pública vai em `VITE_SUPABASE_ANON_KEY`  
+(mesmo que seja a chave **publishable** nova — o nome da variável continua esse).
 
 ---
 
@@ -80,12 +114,60 @@ npm install
 cp .env.example .env
 ```
 
-4. Edite o `.env` com os valores do Supabase:
+Isso cria um arquivo chamado `.env` copiado do modelo `.env.example`.
+
+4. **Como editar o `.env`** (escolha um jeito):
+
+##### No Cursor / VS Code (recomendado)
+
+1. Na barra lateral de **arquivos** (Explorer), na raiz do projeto `Teste`, procure `.env`.  
+   Se não aparecer: arquivos que começam com ponto às vezes ficam ocultos — use `Ctrl+P` (ou `Cmd+P` no Mac), digite `.env` e Enter.
+2. Abra o arquivo. Você verá algo assim:
 
 ```env
 VITE_SUPABASE_URL=https://SEU_PROJETO.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOi...sua_anon_key
+VITE_SUPABASE_ANON_KEY=sua_anon_key_aqui
 ```
+
+3. **Substitua** só os valores depois do `=`, sem aspas e sem espaço:
+   - No lugar de `https://SEU_PROJETO.supabase.co` → sua Project URL  
+   - No lugar de `sua_anon_key_aqui` → sua chave **anon** ou **publishable**
+4. Exemplo final (valores inventados):
+
+```env
+VITE_SUPABASE_URL=https://abcdefghijklmnop.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx
+```
+
+ou, se o Supabase mostrou chave nova:
+
+```env
+VITE_SUPABASE_URL=https://abcdefghijklmnop.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_xxxxxxxx
+```
+
+5. Salve: `Ctrl+S` (Windows/Linux) ou `Cmd+S` (Mac).
+
+##### No Bloco de Notas / TextEdit (Windows)
+
+1. Abra a pasta do projeto no Explorer (onde estão `package.json` e `src`).
+2. Se não vir `.env`: em **Exibir**, marque **Itens ocultos**.
+3. Clique com o botão direito em `.env` → **Abrir com** → Bloco de Notas.
+4. Cole/substitua as duas linhas como no exemplo acima → Salvar.
+
+##### No terminal (nano)
+
+```bash
+nano .env
+```
+
+Edite as duas linhas, depois `Ctrl+O` Enter para salvar e `Ctrl+X` para sair.
+
+**Cuidados:**
+- Não coloque aspas (`"`) em volta dos valores.
+- Não deixe espaço antes/depois do `=`.
+- Não commit o `.env` no GitHub.
+- Depois de salvar o `.env`, **pare** o `npm run dev` (`Ctrl+C`) e rode de novo — o Vite só lê o `.env` na subida.
 
 5. Suba o app:
 
