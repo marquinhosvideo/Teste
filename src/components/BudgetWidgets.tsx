@@ -15,7 +15,6 @@ export function BudgetWidgets({ trip }: Props) {
     <section className="budget-widgets" aria-label="Orçamentos da viagem">
       <div className="budget-widgets__head">
         <p className="eyebrow">Orçamentos</p>
-        <p className="budget-widgets__hint">Teto provisório R$ 5.000 cada</p>
       </div>
       <div className="budget-widgets__grid">
         {budgets.map((budget) => {

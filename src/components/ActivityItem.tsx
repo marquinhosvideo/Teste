@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Check, ChevronDown, MapPin } from 'lucide-react'
+import { Check, ChevronDown, Copy, MapPin } from 'lucide-react'
 import type { Activity } from '../types'
+import { copyText } from '../lib/addresses'
 
 type Props = {
   activity: Activity
@@ -9,7 +10,17 @@ type Props = {
 
 export function ActivityItem({ activity, onToggle }: Props) {
   const [expanded, setExpanded] = useState(false)
+  const [copied, setCopied] = useState(false)
   const hasNotes = Boolean(activity.notes && activity.notes !== activity.title)
+  const hasLocation = Boolean(activity.location)
+
+  async function handleCopyAddress() {
+    if (!activity.location) return
+    const ok = await copyText(activity.location)
+    if (!ok) return
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 1600)
+  }
 
   return (
     <div className={`activity ${activity.done ? 'activity--done' : ''}`}>
@@ -25,18 +36,12 @@ export function ActivityItem({ activity, onToggle }: Props) {
         <span className="activity__body">
           <span className="activity__meta">
             {activity.time ? <span className="activity__time">{activity.time}</span> : null}
-            {activity.location ? (
-              <span className="activity__location">
-                <MapPin size={12} />
-                {activity.location}
-              </span>
-            ) : null}
           </span>
           <span className="activity__title">{activity.title}</span>
         </span>
       </button>
 
-      {hasNotes ? (
+      {(hasNotes || hasLocation) && (
         <>
           <button
             type="button"
@@ -48,10 +53,28 @@ export function ActivityItem({ activity, onToggle }: Props) {
             <ChevronDown size={16} />
           </button>
           {expanded ? (
-            <div className="activity__notes">{activity.notes}</div>
+            <div className="activity__details">
+              {hasNotes ? <div className="activity__notes">{activity.notes}</div> : null}
+              {hasLocation ? (
+                <div className="activity__address">
+                  <div className="activity__address-text">
+                    <MapPin size={15} aria-hidden />
+                    <p>{activity.location}</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn--ghost address-card__copy"
+                    onClick={() => void handleCopyAddress()}
+                  >
+                    <Copy size={15} />
+                    {copied ? 'Copiado' : 'Copiar p/ Waze'}
+                  </button>
+                </div>
+              ) : null}
+            </div>
           ) : null}
         </>
-      ) : null}
+      )}
     </div>
   )
 }

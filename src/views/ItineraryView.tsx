@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { Trip } from '../types'
 import { DayChips } from '../components/DayChips'
 import { DayNotes } from '../components/DayNotes'
+import { AddressCopyList } from '../components/AddressCopyList'
 import { ActivityItem } from '../components/ActivityItem'
+import { extractDayAddresses } from '../lib/addresses'
 import { formatDayLabel } from '../lib/format'
 
 type Props = {
@@ -14,6 +16,17 @@ type Props = {
 export function ItineraryView({ trip, initialDayId, onToggle }: Props) {
   const [selectedId, setSelectedId] = useState(initialDayId ?? trip.days[0]?.id)
   const day = trip.days.find((d) => d.id === selectedId) ?? trip.days[0]
+  const addresses = useMemo(
+    () =>
+      day
+        ? extractDayAddresses({
+            dayNotes: day.dayNotes,
+            activityLocations: day.activities.map((a) => a.location),
+          })
+        : [],
+    [day],
+  )
+
   if (!day) {
     return <p className="empty-hint">Nenhum dia no roteiro. Importe seu Excel.</p>
   }
@@ -50,6 +63,8 @@ export function ItineraryView({ trip, initialDayId, onToggle }: Props) {
           />
         ))}
       </div>
+
+      <AddressCopyList addresses={addresses} />
     </section>
   )
 }

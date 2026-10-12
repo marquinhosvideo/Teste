@@ -1,8 +1,11 @@
+import { useMemo } from 'react'
 import type { Day, Trip } from '../types'
 import { ActivityItem } from '../components/ActivityItem'
+import { AddressCopyList } from '../components/AddressCopyList'
 import { DayNotes } from '../components/DayNotes'
 import { ProgressRing } from '../components/ProgressRing'
 import { formatDayLabel, formatMoney } from '../lib/format'
+import { extractDayAddresses } from '../lib/addresses'
 import { spentByBudget } from '../lib/budgets'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
 
@@ -19,6 +22,14 @@ export function TodayView({ trip, day, onToggle }: Props) {
   const dayExpenses = trip.expenses.filter((e) => e.dayId === day.id)
   const dayTotal = dayExpenses.reduce((s, e) => s + e.amount, 0)
   const byBudget = spentByBudget(dayExpenses)
+  const addresses = useMemo(
+    () =>
+      extractDayAddresses({
+        dayNotes: day.dayNotes,
+        activityLocations: day.activities.map((a) => a.location),
+      }),
+    [day],
+  )
 
   return (
     <section className="view today-view">
@@ -70,6 +81,8 @@ export function TodayView({ trip, day, onToggle }: Props) {
           />
         ))}
       </div>
+
+      <AddressCopyList addresses={addresses} />
     </section>
   )
 }

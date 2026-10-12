@@ -3,6 +3,7 @@ import type { BudgetId, Trip } from '../types'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
 import { ExpenseForm } from '../components/ExpenseForm'
 import { ExpenseList } from '../components/ExpenseList'
+import { ReceiptScanButton } from '../components/ReceiptScanButton'
 import { DayChips } from '../components/DayChips'
 import { formatMoney } from '../lib/format'
 import { spentByBudget } from '../lib/budgets'
@@ -15,7 +16,7 @@ type Props = {
     budgetId: BudgetId
     description: string
     amount: number
-  }) => void
+  }) => void | Promise<void>
   onRemove: (id: string) => void
 }
 
@@ -93,12 +94,24 @@ export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
         </div>
       ) : null}
 
-      <ExpenseForm
-        days={trip.days}
-        defaultDayId={defaultDayId}
-        currency={trip.currency}
-        onSubmit={onAdd}
-      />
+      <div className="expense-actions">
+        <ExpenseForm
+          days={trip.days}
+          defaultDayId={defaultDayId}
+          currency={trip.currency}
+          onSubmit={onAdd}
+        />
+        <ReceiptScanButton
+          days={trip.days}
+          defaultDayId={defaultDayId}
+          currency={trip.currency}
+          onConfirm={async (items) => {
+            for (const item of items) {
+              await onAdd(item)
+            }
+          }}
+        />
+      </div>
 
       <ExpenseList
         expenses={filtered}
