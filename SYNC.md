@@ -272,11 +272,13 @@ O texto do roteiro (Manhã/Tarde/Noite) continua no app / Excel. Só o **estado 
 
 | Sintoma | O que fazer |
 | --- | --- |
+| **Failed to fetch** ao criar conta / entrar | 1) Confira `.env`: URL `https://xxxx.supabase.co` (sem aspas, sem `/` no final) e chave anon/publishable. 2) Salve o `.env`. 3) Pare o `npm run dev` (`Ctrl+C`) e rode de novo. 4) Teste no Chrome sem extensão de bloqueio. 5) Se a conta já existir, use **Entrar**. |
+| “User already registered” / já tem conta | Na tela, clique **Já tem conta? Entrar** e use a senha. Se esqueceu: Supabase → **Authentication → Users** → usuário → **Send password recovery** ou defina nova senha. |
 | “Invalid API key” / não conecta | URL e anon key no `.env` ou no deploy; reinicie `npm run dev` depois de editar `.env` |
 | Cria conta e não entra | Desative **Confirm email** no Supabase |
 | Marca check e o outro celular não atualiza | Confirme Realtime nas tabelas; os dois precisam estar logados |
 | Badge “Só neste aparelho” | Falta `.env` / variáveis de ambiente no deploy |
-| Erro de permissão (RLS) | Rode de novo o `schema.sql` (policies) e use usuário autenticado |
+| Erro de permissão (RLS) | Rode de novo o `schema.sql` / `allowlist.sql` e use e-mail liberado |
 
 ---
 

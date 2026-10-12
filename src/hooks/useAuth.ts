@@ -12,6 +12,43 @@ type AuthState = {
 
 const DENIED = 'Este e-mail não está autorizado. Peça ao administrador da viagem.'
 
+function friendlyAuthError(err: unknown): string {
+  const message =
+    err instanceof Error
+      ? err.message
+      : typeof err === 'object' && err && 'message' in err
+        ? String((err as { message: unknown }).message)
+        : String(err || 'Erro desconhecido')
+  const lower = message.toLowerCase()
+
+  if (
+    lower.includes('failed to fetch') ||
+    lower.includes('networkerror') ||
+    lower === 'fetch failed' ||
+    lower.includes('load failed')
+  ) {
+    return (
+      'Não consegui falar com o Supabase (Failed to fetch). ' +
+      'Confira o .env (VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY), salve, pare o npm run dev (Ctrl+C) e suba de novo. ' +
+      'A URL deve ser https://xxxx.supabase.co — sem aspas e sem barra no final.'
+    )
+  }
+  if (lower.includes('user_already_exists') || lower.includes('already registered')) {
+    return 'Este e-mail já tem conta. Use “Entrar” em vez de criar conta.'
+  }
+  if (lower.includes('email_nao_autorizado') || lower.includes('não pode se cadastrar')) {
+    return DENIED
+  }
+  if (lower.includes('invalid login') || lower.includes('invalid credentials')) {
+    return 'E-mail ou senha incorretos.'
+  }
+  // evita reprocessar mensagem já traduzida
+  if (message.startsWith('Não consegui falar') || message.startsWith('Este e-mail já')) {
+    return message
+  }
+  return message
+}
+
 export function useAuth() {
   const [state, setState] = useState<AuthState>({
     ready: !isSupabaseConfigured,
@@ -67,13 +104,16 @@ export function useAuth() {
       throw new Error(DENIED)
     }
     setState((p) => ({ ...p, error: null }))
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    })
-    if (error) {
-      setState((p) => ({ ...p, error: error.message }))
-      throw error
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      })
+      if (error) throw error
+    } catch (err) {
+      const msg = friendlyAuthError(err)
+      setState((p) => ({ ...p, error: msg }))
+      throw new Error(msg)
     }
   }, [])
 
@@ -84,14 +124,14 @@ export function useAuth() {
       throw new Error(DENIED)
     }
     setState((p) => ({ ...p, error: null }))
-    const { error } = await supabase.auth.signUp({
-      email: email.trim(),
-      password,
-    })
-    if (error) {
-      const msg = error.message.includes('EMAIL_NAO_AUTORIZADO')
-        ? DENIED
-        : error.message
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+      })
+      if (error) throw error
+    } catch (err) {
+      const msg = friendlyAuthError(err)
       setState((p) => ({ ...p, error: msg }))
       throw new Error(msg)
     }
