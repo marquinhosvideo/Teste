@@ -1,6 +1,8 @@
-# Roteiro — viagem em família
+# Roteiro — Orlando 2026
 
-App web mobile-first para acompanhar a programação da viagem, marcar o que já foi feito e registrar quanto foi gasto no dia (por categoria).
+App web mobile-first para a viagem em família a Orlando: acompanhar o roteiro dia a dia (Manhã / Tarde / Noite), marcar o que já foi feito e registrar gastos por categoria.
+
+O roteiro padrão vem da planilha `Roteiro_Orlando_2026.xlsx`.
 
 ## Como usar
 
@@ -11,21 +13,19 @@ npm run dev
 
 Abra no celular (mesma rede) ou use o DevTools em modo mobile.
 
-### Importar seu Excel
+### Abas
 
-1. Abra a aba **Importar**
-2. Baixe o **modelo Excel**
-3. Preencha:
-   - **Roteiro**: Data, Dia, Horário, Atividade, Local, Observações
-   - **Gastos** (opcional): Data, Categoria, Descrição, Valor
-   - **Viagem** (opcional): Nome, Destino, Moeda
-4. Envie o arquivo `.xlsx` ou `.csv`
+- **Hoje** — dia ativo, progresso e gastos do dia
+- **Roteiro** — todos os dias da viagem com checks
+- **Gastos** — registrar e filtrar por categoria (USD)
+- **Dicas** — ressalvas da aba “Dicas e ressalvas” do Excel
+- **Excel** — baixar/reimportar a planilha
+
+### Formato do Excel
+
+Aba **Roteiro completo**: Data, Dia, Tipo do dia, Manhã, Tarde, Noite, Lugares e endereços, Observações.
 
 Os checks e gastos ficam salvos no navegador (`localStorage`) deste aparelho.
-
-### Categorias de gasto
-
-Alimentação · Transporte · Hospedagem · Atividades · Compras · Outros
 
 ## Scripts
 

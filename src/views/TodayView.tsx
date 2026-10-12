@@ -1,6 +1,7 @@
 import type { Day, Expense, Trip } from '../types'
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '../types'
 import { ActivityItem } from '../components/ActivityItem'
+import { DayNotes } from '../components/DayNotes'
 import { ProgressRing } from '../components/ProgressRing'
 import { formatDayLabel, formatMoney } from '../lib/format'
 
@@ -32,7 +33,7 @@ export function TodayView({ trip, day, onToggle }: Props) {
             <p className="eyebrow">{formatDayLabel(day.date)}</p>
             <h2>{day.label}</h2>
             <p className="muted">
-              {done} de {total} concluídos
+              {done} de {total} períodos
             </p>
           </div>
           <ProgressRing value={pct} />
@@ -53,6 +54,8 @@ export function TodayView({ trip, day, onToggle }: Props) {
           </div>
         </div>
       </div>
+
+      <DayNotes notes={day.dayNotes} />
 
       <div className="section-head">
         <h3>Programação</h3>

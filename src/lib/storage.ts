@@ -1,7 +1,7 @@
 import type { Trip } from '../types'
 import { sampleTrip } from '../data/sampleTrip'
 
-const STORAGE_KEY = 'roteiro-familia-trip-v1'
+const STORAGE_KEY = 'roteiro-orlando-2026-v2'
 
 export function loadTrip(): Trip {
   try {

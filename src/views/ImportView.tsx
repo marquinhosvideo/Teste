@@ -24,7 +24,8 @@ export function ImportView({ trip, onImported, onReset }: Props) {
       const result = await importTripFromFile(file, trip)
       onImported(result.trip)
       setStatus(
-        `Importado: ${result.stats.days} dias, ${result.stats.activities} atividades` +
+        `Importado: ${result.stats.days} dias, ${result.stats.activities} períodos` +
+          (result.stats.tips ? `, ${result.stats.tips} dicas` : '') +
           (result.stats.expenses ? `, ${result.stats.expenses} gastos` : '') +
           '.',
       )
@@ -39,28 +40,30 @@ export function ImportView({ trip, onImported, onReset }: Props) {
   return (
     <section className="view">
       <header className="view-header">
-        <h1>Importar</h1>
-        <p className="muted">Traga o planejamento do Excel para o celular</p>
+        <h1>Excel</h1>
+        <p className="muted">Atualize o app com a planilha da família</p>
       </header>
 
       <div className="import-hero">
         <FileSpreadsheet size={28} strokeWidth={1.75} />
-        <h2>Seu Excel vira roteiro online</h2>
+        <h2>Roteiro Orlando 2026</h2>
         <p>
-          Baixe o modelo, cole suas abas de programação e gastos, e envie o arquivo. Os checks e
-          valores ficam salvos neste aparelho.
+          O app já vem com a planilha <strong>Roteiro_Orlando_2026</strong>. Se você
+          alterar o Excel, envie de novo aqui — Manhã, Tarde e Noite viram checks no
+          celular.
         </p>
       </div>
 
       <ol className="steps">
         <li>
-          <strong>Aba Roteiro</strong> — colunas: Data, Dia, Horário, Atividade, Local, Observações
+          <strong>Roteiro completo</strong> — Data, Tipo do dia, Manhã, Tarde, Noite,
+          Lugares, Observações
         </li>
         <li>
-          <strong>Aba Gastos</strong> — colunas: Data, Categoria, Descrição, Valor
+          <strong>Dicas e ressalvas</strong> — entram na aba Dicas
         </li>
         <li>
-          <strong>Aba Viagem</strong> (opcional) — Nome, Destino, Moeda
+          Gastos você registra no app (por categoria e por dia)
         </li>
       </ol>
 
@@ -71,7 +74,7 @@ export function ImportView({ trip, onImported, onReset }: Props) {
           onClick={() => void downloadTemplate()}
         >
           <Download size={18} />
-          Baixar modelo Excel
+          Baixar planilha Orlando
         </button>
 
         <button
@@ -81,7 +84,7 @@ export function ImportView({ trip, onImported, onReset }: Props) {
           onClick={() => inputRef.current?.click()}
         >
           <Upload size={18} />
-          {busy ? 'Importando…' : 'Enviar Excel / CSV'}
+          {busy ? 'Importando…' : 'Enviar Excel atualizado'}
         </button>
         <input
           ref={inputRef}
@@ -96,7 +99,7 @@ export function ImportView({ trip, onImported, onReset }: Props) {
       {error ? <p className="status status--err">{error}</p> : null}
 
       <div className="current-trip">
-        <p className="eyebrow">Viagem atual neste aparelho</p>
+        <p className="eyebrow">Viagem neste aparelho</p>
         <p className="current-trip__name">{trip.name}</p>
         <p className="muted">
           {trip.destination} · {trip.days.length} dias · {trip.expenses.length} gastos
@@ -107,15 +110,19 @@ export function ImportView({ trip, onImported, onReset }: Props) {
         type="button"
         className="btn btn--ghost btn--block"
         onClick={() => {
-          if (confirm('Restaurar o roteiro de exemplo? Checks e gastos atuais serão apagados.')) {
+          if (
+            confirm(
+              'Restaurar o roteiro Orlando da planilha? Checks e gastos atuais serão apagados.',
+            )
+          ) {
             onReset()
-            setStatus('Roteiro de exemplo restaurado.')
+            setStatus('Roteiro Orlando restaurado.')
             setError(null)
           }
         }}
       >
         <RotateCcw size={18} />
-        Restaurar exemplo
+        Restaurar Orlando da planilha
       </button>
     </section>
   )

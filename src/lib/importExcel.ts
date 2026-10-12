@@ -1,5 +1,5 @@
 import type { WorkSheet } from 'xlsx'
-import type { Activity, Day, Expense, ExpenseCategory, Trip } from '../types'
+import type { Activity, Day, Expense, ExpenseCategory, Tip, Trip } from '../types'
 import { parseAmount, uid } from './format'
 
 type XLSXModule = typeof import('xlsx')
@@ -20,6 +20,9 @@ const CATEGORY_MAP: Record<string, ExpenseCategory> = {
   táxi: 'transporte',
   combustivel: 'transporte',
   combustível: 'transporte',
+  carro: 'transporte',
+  pedágio: 'transporte',
+  pedagio: 'transporte',
   hospedagem: 'hospedagem',
   hotel: 'hospedagem',
   pousada: 'hospedagem',
@@ -27,14 +30,19 @@ const CATEGORY_MAP: Record<string, ExpenseCategory> = {
   passeio: 'atividades',
   ingresso: 'atividades',
   turismo: 'atividades',
+  parque: 'atividades',
+  disney: 'atividades',
   compras: 'compras',
   souvenir: 'compras',
   lembranca: 'compras',
   lembrança: 'compras',
+  outlet: 'compras',
   outros: 'outros',
   outro: 'outros',
   misc: 'outros',
 }
+
+type Row = Record<string, unknown>
 
 function normalizeHeader(value: unknown): string {
   return String(value ?? '')
@@ -44,7 +52,18 @@ function normalizeHeader(value: unknown): string {
     .trim()
 }
 
-function excelDateToIso(value: unknown, XLSX: XLSXModule): string | null {
+function clean(value: unknown): string {
+  return String(value ?? '')
+    .replace(/\r\n/g, '\n')
+    .trim()
+}
+
+function isEmptyPeriod(value: unknown): boolean {
+  const t = clean(value)
+  return !t || t === '—' || t === '-'
+}
+
+function excelDateToIso(value: unknown, XLSX: XLSXModule, defaultYear = 2026): string | null {
   if (value == null || value === '') return null
   if (typeof value === 'number') {
     const parsed = XLSX.SSF.parse_date_code(value)
@@ -54,11 +73,15 @@ function excelDateToIso(value: unknown, XLSX: XLSXModule): string | null {
     return `${parsed.y}-${mm}-${dd}`
   }
   const text = String(value).trim()
-  const br = text.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/)
+  const br = text.match(/^(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?$/)
   if (br) {
     const day = br[1].padStart(2, '0')
     const month = br[2].padStart(2, '0')
-    const year = br[3].length === 2 ? `20${br[3]}` : br[3]
+    const year = br[3]
+      ? br[3].length === 2
+        ? `20${br[3]}`
+        : br[3]
+      : String(defaultYear)
     return `${year}-${month}-${day}`
   }
   if (/^\d{4}-\d{2}-\d{2}/.test(text)) return text.slice(0, 10)
@@ -84,8 +107,6 @@ function formatTime(value: unknown): string | undefined {
   return text
 }
 
-type Row = Record<string, unknown>
-
 function sheetToRows(XLSX: XLSXModule, sheet: WorkSheet): Row[] {
   return XLSX.utils.sheet_to_json<Row>(sheet, { defval: '' })
 }
@@ -99,12 +120,99 @@ function pick(row: Row, keys: string[]): unknown {
   return ''
 }
 
+function hasOrlandoColumns(rows: Row[]): boolean {
+  if (!rows.length) return false
+  const headers = Object.keys(rows[0]).map(normalizeHeader)
+  return headers.includes('manha') && headers.includes('tarde') && headers.includes('noite')
+}
+
+function periodTitle(period: string, text: string): string {
+  const line = text.split('\n')[0]
+  const body = line.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}\s⭐]*\s*/u, '')
+  const short = body.length > 100 ? `${body.slice(0, 97)}…` : body
+  return `${period} — ${short}`
+}
+
+function buildOrlandoDays(rows: Row[], XLSX: XLSXModule): Day[] {
+  const days: Day[] = []
+
+  for (const row of rows) {
+    const date = excelDateToIso(pick(row, ['data', 'date']), XLSX, 2026)
+    if (!date) continue
+
+    const label =
+      clean(pick(row, ['tipo do dia', 'tipo'])) ||
+      clean(pick(row, ['dia', 'label'])) ||
+      `Dia ${days.length + 1}`
+
+    const location = clean(
+      pick(row, ['lugares e enderecos', 'lugares e endereços', 'local', 'endereco']),
+    )
+    const drive = clean(
+      Object.entries(row).find(([k]) => normalizeHeader(k).includes('carro'))?.[1],
+    )
+    const kid = clean(
+      Object.entries(row).find(([k]) => normalizeHeader(k).includes('crianca'))?.[1],
+    )
+    const obs = clean(
+      pick(row, ['observacoes / horarios', 'observacoes', 'obs', 'notas']),
+    )
+
+    const dayNotes = [
+      location && location !== '—' ? `📍 ${location}` : '',
+      drive && drive !== '—' ? `🚗 ${drive}` : '',
+      kid && kid !== '—' ? `👶 ${kid}` : '',
+      obs && obs !== '—' ? `📝 ${obs}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n\n')
+
+    const periods: { key: string; time: string; keys: string[] }[] = [
+      { key: 'Manhã', time: '09:00', keys: ['manha', 'manhã'] },
+      { key: 'Tarde', time: '14:00', keys: ['tarde'] },
+      { key: 'Noite', time: '19:00', keys: ['noite'] },
+    ]
+
+    const activities: Activity[] = []
+    for (const period of periods) {
+      const raw = pick(row, period.keys)
+      if (isEmptyPeriod(raw)) continue
+      const text = clean(raw)
+      activities.push({
+        id: uid('act'),
+        time: period.time,
+        title: periodTitle(period.key, text),
+        location:
+          location && location !== '—'
+            ? location.split('|')[0].trim()
+            : undefined,
+        notes: text,
+        done: false,
+      })
+    }
+
+    if (!activities.length) continue
+
+    days.push({
+      id: uid('day'),
+      date,
+      label,
+      dayNotes: dayNotes || undefined,
+      activities,
+    })
+  }
+
+  return days.sort((a, b) => a.date.localeCompare(b.date))
+}
+
 function buildDaysFromRows(rows: Row[], XLSX: XLSXModule): Day[] {
+  if (hasOrlandoColumns(rows)) return buildOrlandoDays(rows, XLSX)
+
   const byDate = new Map<string, Day>()
 
   for (const row of rows) {
     const date = excelDateToIso(pick(row, ['data', 'date']), XLSX)
-    const title = String(
+    const title = clean(
       pick(row, [
         'atividade',
         'atividade/programacao',
@@ -112,15 +220,14 @@ function buildDaysFromRows(rows: Row[], XLSX: XLSXModule): Day[] {
         'titulo',
         'title',
         'item',
-      ]) ?? '',
-    ).trim()
+      ]),
+    )
     if (!date || !title) continue
 
     if (!byDate.has(date)) {
       const label =
-        String(
-          pick(row, ['dia', 'label', 'titulo do dia', 'nome do dia']) ?? '',
-        ).trim() || `Dia ${byDate.size + 1}`
+        clean(pick(row, ['dia', 'label', 'titulo do dia', 'nome do dia', 'tipo do dia'])) ||
+        `Dia ${byDate.size + 1}`
       byDate.set(date, {
         id: uid('day'),
         date,
@@ -130,28 +237,19 @@ function buildDaysFromRows(rows: Row[], XLSX: XLSXModule): Day[] {
     }
 
     const day = byDate.get(date)!
-    const maybeLabel = String(
-      pick(row, ['label', 'titulo do dia', 'nome do dia']) ?? '',
-    ).trim()
-    if (maybeLabel) day.label = maybeLabel
-    // If "Dia" column looks like a label (not a date), keep/update it
-    const diaCol = String(pick(row, ['dia']) ?? '').trim()
+    const diaCol = clean(pick(row, ['dia']))
     if (diaCol && !excelDateToIso(diaCol, XLSX)) day.label = diaCol
+    const maybeLabel = clean(pick(row, ['label', 'titulo do dia', 'nome do dia', 'tipo do dia']))
+    if (maybeLabel) day.label = maybeLabel
 
-    const activity: Activity = {
+    day.activities.push({
       id: uid('act'),
       time: formatTime(pick(row, ['horario', 'hora', 'time'])),
       title,
-      location:
-        String(pick(row, ['local', 'lugar', 'location', 'endereco']) ?? '').trim() ||
-        undefined,
-      notes:
-        String(
-          pick(row, ['observacoes', 'obs', 'notas', 'notes', 'detalhes']) ?? '',
-        ).trim() || undefined,
+      location: clean(pick(row, ['local', 'lugar', 'location', 'endereco'])) || undefined,
+      notes: clean(pick(row, ['observacoes', 'obs', 'notas', 'notes', 'detalhes'])) || undefined,
       done: false,
-    }
-    day.activities.push(activity)
+    })
   }
 
   return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date))
@@ -167,10 +265,9 @@ function buildExpensesFromRows(
   return rows
     .map((row) => {
       const date = excelDateToIso(pick(row, ['data', 'date']), XLSX)
-      const description = String(
-        pick(row, ['descricao', 'descrição', 'description', 'item', 'gasto']) ??
-          '',
-      ).trim()
+      const description = clean(
+        pick(row, ['descricao', 'descrição', 'description', 'item', 'gasto']),
+      )
       const amount = parseAmount(
         pick(row, ['valor', 'amount', 'preco', 'preço', 'custo']),
       )
@@ -201,9 +298,18 @@ function buildExpensesFromRows(
     .filter((e): e is Expense => e != null)
 }
 
+function buildTips(rows: Row[]): Tip[] {
+  return rows
+    .map((row) => ({
+      tema: clean(pick(row, ['tema', 'titulo', 'title'])),
+      texto: clean(pick(row, ['dica / ressalva', 'dica', 'ressalva', 'texto', 'nota'])),
+    }))
+    .filter((t) => t.tema && t.texto)
+}
+
 export type ImportResult = {
   trip: Trip
-  stats: { days: number; activities: number; expenses: number }
+  stats: { days: number; activities: number; expenses: number; tips: number }
 }
 
 export async function importTripFromFile(
@@ -217,15 +323,17 @@ export async function importTripFromFile(
   const sheetNames = workbook.SheetNames
   const roteiroName =
     sheetNames.find((n) =>
-      /roteiro|itinerario|programacao|agenda|plano/i.test(n),
+      /roteiro|itinerario|programacao|agenda|plano|completo/i.test(n),
     ) ?? sheetNames[0]
   const gastosName = sheetNames.find((n) =>
     /gasto|despesa|expense|custo|financeiro/i.test(n),
   )
+  const tipsName = sheetNames.find((n) => /dica|ressalva/i.test(n))
   const metaName = sheetNames.find((n) => /viagem|trip|info|geral/i.test(n))
 
   const roteiroSheet = roteiroName ? workbook.Sheets[roteiroName] : undefined
   const gastosSheet = gastosName ? workbook.Sheets[gastosName] : undefined
+  const tipsSheet = tipsName ? workbook.Sheets[tipsName] : undefined
   const metaSheet = metaName ? workbook.Sheets[metaName] : undefined
 
   const roteiroRows = roteiroSheet ? sheetToRows(XLSX, roteiroSheet) : []
@@ -233,7 +341,7 @@ export async function importTripFromFile(
 
   if (!days.length) {
     throw new Error(
-      'Não encontrei atividades no arquivo. Use colunas: Data, Atividade (e opcionalmente Horário, Local, Observações).',
+      'Não encontrei o roteiro. Na planilha Orlando use a aba “Roteiro completo” (Data, Manhã, Tarde, Noite).',
     )
   }
 
@@ -246,25 +354,28 @@ export async function importTripFromFile(
       })
 
   const expenses = buildExpensesFromRows(expenseRows, days, XLSX)
+  const tips = tipsSheet ? buildTips(sheetToRows(XLSX, tipsSheet)) : current.tips
 
   const metaRows = metaSheet ? sheetToRows(XLSX, metaSheet) : []
   const meta = metaRows[0] ?? {}
+  const looksOrlando = hasOrlandoColumns(roteiroRows)
 
   const trip: Trip = {
-    name:
-      String(pick(meta, ['nome', 'name', 'viagem']) || current.name).trim() ||
-      current.name,
-    destination:
-      String(
-        pick(meta, ['destino', 'destination', 'cidade']) || current.destination,
-      ).trim() || current.destination,
+    name: looksOrlando
+      ? 'Orlando 2026'
+      : clean(pick(meta, ['nome', 'name', 'viagem'])) || current.name,
+    destination: looksOrlando
+      ? 'Orlando, Flórida · família'
+      : clean(pick(meta, ['destino', 'destination', 'cidade'])) ||
+        current.destination,
     startDate: days[0].date,
     endDate: days[days.length - 1].date,
-    currency: String(
-      pick(meta, ['moeda', 'currency']) || current.currency || 'BRL',
-    ),
+    currency: looksOrlando
+      ? 'USD'
+      : clean(pick(meta, ['moeda', 'currency'])) || current.currency || 'BRL',
     days,
     expenses,
+    tips,
   }
 
   return {
@@ -273,34 +384,44 @@ export async function importTripFromFile(
       days: days.length,
       activities: days.reduce((sum, d) => sum + d.activities.length, 0),
       expenses: expenses.length,
+      tips: tips?.length ?? 0,
     },
   }
 }
 
 export async function downloadTemplate(): Promise<void> {
+  // Prefer the family's real Orlando workbook when available
+  try {
+    const res = await fetch('/Roteiro_Orlando_2026.xlsx')
+    if (res.ok) {
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'Roteiro_Orlando_2026.xlsx'
+      a.click()
+      URL.revokeObjectURL(url)
+      return
+    }
+  } catch {
+    // fall through to generated template
+  }
+
   const XLSX = await loadXlsx()
   const wb = XLSX.utils.book_new()
-
   const roteiro = [
-    ['Data', 'Dia', 'Horário', 'Atividade', 'Local', 'Observações'],
-    ['10/07/2026', 'Chegada', '08:00', 'Saída de casa', 'Aeroporto', 'Documentos'],
-    ['10/07/2026', 'Chegada', '16:00', 'Check-in', 'Pousada', ''],
-    ['11/07/2026', 'Passeios', '10:00', 'Mini Mundo', 'Gramado', 'Ingressos online'],
-    ['11/07/2026', 'Passeios', '19:00', 'Jantar', 'Centro', ''],
+    ['Data', 'Dia', 'Tipo do dia', 'Manhã', 'Tarde', 'Noite', 'Lugares e endereços', 'Observações / horários'],
+    [
+      '27/11',
+      'Sex',
+      '✈️ Viagem',
+      '—',
+      '—',
+      '✈️ VIAGEM — Embarque',
+      'Aeroporto',
+      'Levar documentos',
+    ],
   ]
-  const gastos = [
-    ['Data', 'Categoria', 'Descrição', 'Valor'],
-    ['10/07/2026', 'Transporte', 'Uber aeroporto', 85],
-    ['10/07/2026', 'Alimentação', 'Almoço na estrada', 120],
-    ['11/07/2026', 'Atividades', 'Ingressos Mini Mundo', 250],
-  ]
-  const info = [
-    ['Nome', 'Destino', 'Moeda'],
-    ['Férias em Família', 'Gramado & Canela', 'BRL'],
-  ]
-
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(roteiro), 'Roteiro')
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(gastos), 'Gastos')
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(info), 'Viagem')
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(roteiro), 'Roteiro completo')
   XLSX.writeFile(wb, 'modelo-roteiro-familia.xlsx')
 }

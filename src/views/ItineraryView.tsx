@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Trip } from '../types'
 import { DayChips } from '../components/DayChips'
+import { DayNotes } from '../components/DayNotes'
 import { ActivityItem } from '../components/ActivityItem'
 import { formatDayLabel } from '../lib/format'
 
@@ -24,7 +25,7 @@ export function ItineraryView({ trip, initialDayId, onToggle }: Props) {
       <header className="view-header">
         <h1>Roteiro</h1>
         <p className="muted">
-          {trip.days.length} dias · toque para marcar o que já foi feito
+          {trip.days.length} dias em Orlando · marque Manhã, Tarde e Noite
         </p>
       </header>
 
@@ -34,9 +35,11 @@ export function ItineraryView({ trip, initialDayId, onToggle }: Props) {
         <p className="eyebrow">{formatDayLabel(day.date)}</p>
         <h2>{day.label}</h2>
         <p className="muted">
-          {done}/{day.activities.length} atividades
+          {done}/{day.activities.length} períodos
         </p>
       </div>
+
+      <DayNotes notes={day.dayNotes} />
 
       <div className="activity-stack">
         {day.activities.map((activity) => (

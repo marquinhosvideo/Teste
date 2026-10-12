@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { CalendarDays, Home, Receipt, Upload } from 'lucide-react'
+import { CalendarDays, Home, Lightbulb, Receipt, Upload } from 'lucide-react'
 import type { TabId } from './types'
 import { useTrip } from './hooks/useTrip'
 import { TodayView } from './views/TodayView'
 import { ItineraryView } from './views/ItineraryView'
 import { ExpensesView } from './views/ExpensesView'
+import { TipsView } from './views/TipsView'
 import { ImportView } from './views/ImportView'
 import './App.css'
 
@@ -12,7 +13,8 @@ const TABS: { id: TabId; label: string; icon: typeof Home }[] = [
   { id: 'hoje', label: 'Hoje', icon: Home },
   { id: 'roteiro', label: 'Roteiro', icon: CalendarDays },
   { id: 'gastos', label: 'Gastos', icon: Receipt },
-  { id: 'importar', label: 'Importar', icon: Upload },
+  { id: 'dicas', label: 'Dicas', icon: Lightbulb },
+  { id: 'importar', label: 'Excel', icon: Upload },
 ]
 
 export default function App() {
@@ -48,6 +50,7 @@ export default function App() {
             onRemove={removeExpense}
           />
         ) : null}
+        {tab === 'dicas' ? <TipsView tips={trip.tips} /> : null}
         {tab === 'importar' ? (
           <ImportView trip={trip} onImported={replaceTrip} onReset={resetToSample} />
         ) : null}
@@ -64,7 +67,7 @@ export default function App() {
             aria-label={label}
             data-tab={id}
           >
-            <Icon size={20} strokeWidth={tab === id ? 2.25 : 1.75} aria-hidden />
+            <Icon size={18} strokeWidth={tab === id ? 2.25 : 1.75} aria-hidden />
             <span>{label}</span>
           </button>
         ))}

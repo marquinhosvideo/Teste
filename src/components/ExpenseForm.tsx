@@ -15,7 +15,7 @@ type Props = {
   }) => void
 }
 
-export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
+export function ExpenseForm({ days, defaultDayId, currency, onSubmit }: Props) {
   const [dayId, setDayId] = useState(defaultDayId)
   const [category, setCategory] = useState<ExpenseCategory>('alimentacao')
   const [description, setDescription] = useState('')
@@ -80,13 +80,13 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
       </div>
 
       <div className="field">
-        <label htmlFor="exp-amount">Valor (R$)</label>
+        <label htmlFor="exp-amount">Valor ({currency === 'USD' ? 'US$' : currency})</label>
         <input
           id="exp-amount"
           inputMode="decimal"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          placeholder="0,00"
+          placeholder="0.00"
           required
         />
       </div>

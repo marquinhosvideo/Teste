@@ -19,6 +19,8 @@ export type Day = {
   id: string
   date: string
   label: string
+  /** Endereços, carro, dicas da criança e observações do dia */
+  dayNotes?: string
   activities: Activity[]
 }
 
@@ -31,6 +33,11 @@ export type Expense = {
   createdAt: string
 }
 
+export type Tip = {
+  tema: string
+  texto: string
+}
+
 export type Trip = {
   name: string
   destination: string
@@ -39,9 +46,10 @@ export type Trip = {
   currency: string
   days: Day[]
   expenses: Expense[]
+  tips?: Tip[]
 }
 
-export type TabId = 'hoje' | 'roteiro' | 'gastos' | 'importar'
+export type TabId = 'hoje' | 'roteiro' | 'gastos' | 'dicas' | 'importar'
 
 export const CATEGORY_LABELS: Record<ExpenseCategory, string> = {
   alimentacao: 'Alimentação',
