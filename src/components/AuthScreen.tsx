@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import { Cloud, LogIn } from 'lucide-react'
+import { Cloud, LogIn, ShieldCheck } from 'lucide-react'
+import { allowedEmailsHint, getAllowedEmails } from '../lib/allowedEmails'
 
 type Props = {
   error: string | null
@@ -8,8 +9,9 @@ type Props = {
 }
 
 export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
+  const allowed = getAllowedEmails()
   const [mode, setMode] = useState<'login' | 'signup'>('login')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(allowed[0] ?? '')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
@@ -34,21 +36,43 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
         <p className="brand">Roteiro</p>
         <h1>Orlando 2026</h1>
         <p className="muted">
-          Entre para ver e atualizar checks e gastos em tempo real com a família.
+          Acesso restrito à família. Só e-mails autorizados podem entrar.
         </p>
+
+        {allowed.length > 0 ? (
+          <p className="auth-allowlist">
+            <ShieldCheck size={16} />
+            Liberados: {allowedEmailsHint()}
+          </p>
+        ) : null}
 
         <form className="auth-form" onSubmit={(e) => void handleSubmit(e)}>
           <div className="field">
             <label htmlFor="auth-email">E-mail</label>
-            <input
-              id="auth-email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="familia@email.com"
-              required
-            />
+            {allowed.length > 0 && allowed.length <= 3 ? (
+              <select
+                id="auth-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              >
+                {allowed.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id="auth-email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="familia@email.com"
+                required
+              />
+            )}
           </div>
           <div className="field">
             <label htmlFor="auth-pass">Senha</label>
@@ -70,7 +94,7 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
 
           <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
             <LogIn size={18} />
-            {busy ? 'Aguarde…' : mode === 'login' ? 'Entrar' : 'Criar conta da família'}
+            {busy ? 'Aguarde…' : mode === 'login' ? 'Entrar' : 'Criar minha conta'}
           </button>
         </form>
 
@@ -83,7 +107,8 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
         </button>
 
         <p className="auth-hint">
-          <Cloud size={14} /> Dica: a família pode usar o mesmo e-mail/senha compartilhado.
+          <Cloud size={14} /> Cada pessoa autorizada cria a própria senha na primeira vez.
+          Outros e-mails são bloqueados.
         </p>
       </div>
     </div>

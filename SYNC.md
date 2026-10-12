@@ -43,6 +43,39 @@ Este guia liga o banco (checks e gastos) ao app do repositório
 3. **Desative** a opção **Confirm email** (importante: senão o primeiro login fica bloqueado até confirmar o e-mail).
 4. Salve.
 
+### 4b. Liberar só 1 ou 2 e-mails (controle de quem acessa)
+
+1. No **SQL Editor**, abra o arquivo do repo [`supabase/allowlist.sql`](./supabase/allowlist.sql).
+2. **Antes de rodar**, edite as linhas do `insert` e coloque **só** os e-mails liberados, por exemplo:
+
+```sql
+insert into public.allowed_emails (email) values
+  ('seuemail@gmail.com'),
+  ('conjuge@gmail.com')
+on conflict (email) do nothing;
+```
+
+3. Rode o SQL (**Run**).
+4. No `.env` do app, use a mesma lista:
+
+```env
+VITE_ALLOWED_EMAILS=seuemail@gmail.com,conjuge@gmail.com
+```
+
+Efeito:
+- Só esses e-mails aparecem / podem criar conta e entrar.
+- Qualquer outro e-mail é bloqueado no app **e** no banco (mesmo que alguém tente burlar o site).
+
+Para liberar ou remover alguém depois:
+
+```sql
+insert into public.allowed_emails (email) values ('novo@email.com');
+-- ou
+delete from public.allowed_emails where email = 'antigo@email.com';
+```
+
+E atualize também o `VITE_ALLOWED_EMAILS` no `.env` / Vercel.
+
 ### 5. Copiar a URL e a chave da API (detalhado)
 
 O menu do Supabase mudou. **Não existe mais** só “Settings → API” em todos os projetos. Use um destes caminhos:

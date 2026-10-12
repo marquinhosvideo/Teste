@@ -101,6 +101,21 @@
   margin: 0;
 }
 
+.auth-allowlist {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(15, 110, 106, 0.08);
+  color: var(--brand-deep);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.35;
+  word-break: break-all;
+}
+
 .setup-banner {
   display: flex;
   gap: 10px;
