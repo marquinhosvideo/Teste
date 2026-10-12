@@ -1,9 +1,10 @@
-import type { Day, Expense, Trip } from '../types'
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '../types'
+import type { Day, Trip } from '../types'
 import { ActivityItem } from '../components/ActivityItem'
 import { DayNotes } from '../components/DayNotes'
 import { ProgressRing } from '../components/ProgressRing'
 import { formatDayLabel, formatMoney } from '../lib/format'
+import { spentByBudget } from '../lib/budgets'
+import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
 
 type Props = {
   trip: Trip
@@ -17,7 +18,7 @@ export function TodayView({ trip, day, onToggle }: Props) {
   const pct = total ? (done / total) * 100 : 0
   const dayExpenses = trip.expenses.filter((e) => e.dayId === day.id)
   const dayTotal = dayExpenses.reduce((s, e) => s + e.amount, 0)
-  const byCategory = summarizeCategories(dayExpenses)
+  const byBudget = spentByBudget(dayExpenses)
 
   return (
     <section className="view today-view">
@@ -45,9 +46,9 @@ export function TodayView({ trip, day, onToggle }: Props) {
             <p className="spend-strip__value">{formatMoney(dayTotal, trip.currency)}</p>
           </div>
           <div className="spend-strip__cats">
-            {CATEGORY_ORDER.filter((c) => byCategory[c] > 0).map((cat) => (
-              <span key={cat} className={`pill pill--${cat}`}>
-                {CATEGORY_LABELS[cat]} {formatMoney(byCategory[cat], trip.currency)}
+            {BUDGET_ORDER.filter((id) => byBudget[id] > 0).map((id) => (
+              <span key={id} className={`pill pill--${id}`}>
+                {BUDGET_LABELS[id]} {formatMoney(byBudget[id], trip.currency)}
               </span>
             ))}
             {!dayExpenses.length ? <span className="muted">Sem gastos ainda</span> : null}
@@ -71,12 +72,4 @@ export function TodayView({ trip, day, onToggle }: Props) {
       </div>
     </section>
   )
-}
-
-function summarizeCategories(expenses: Expense[]): Record<string, number> {
-  const map: Record<string, number> = {}
-  for (const e of expenses) {
-    map[e.category] = (map[e.category] ?? 0) + e.amount
-  }
-  return map
 }

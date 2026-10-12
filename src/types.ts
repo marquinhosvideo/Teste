@@ -1,10 +1,33 @@
-export type ExpenseCategory =
-  | 'alimentacao'
-  | 'transporte'
-  | 'hospedagem'
-  | 'atividades'
-  | 'compras'
-  | 'outros'
+/** Orçamentos acompanhados no topo — valores provisórios de R$ 5.000 */
+export type BudgetId = 'marcos' | 'dielen' | 'helena' | 'alimentacao' | 'outros'
+
+export type Budget = {
+  id: BudgetId
+  label: string
+  /** Teto em BRL — ajuste depois com os valores reais */
+  limit: number
+}
+
+export const BUDGETS: Budget[] = [
+  { id: 'marcos', label: 'Marcos', limit: 5000 },
+  { id: 'dielen', label: 'Dielen', limit: 5000 },
+  { id: 'helena', label: 'Helena', limit: 5000 },
+  { id: 'alimentacao', label: 'Alimentação', limit: 5000 },
+  { id: 'outros', label: 'Outros', limit: 5000 },
+]
+
+export const BUDGET_LABELS: Record<BudgetId, string> = {
+  marcos: 'Marcos',
+  dielen: 'Dielen',
+  helena: 'Helena',
+  alimentacao: 'Alimentação',
+  outros: 'Outros',
+}
+
+export const BUDGET_ORDER: BudgetId[] = BUDGETS.map((b) => b.id)
+
+/** @deprecated use BudgetId — mantido para leitura de dados antigos */
+export type ExpenseCategory = BudgetId
 
 export type Activity = {
   id: string
@@ -19,7 +42,6 @@ export type Day = {
   id: string
   date: string
   label: string
-  /** Endereços, carro, dicas da criança e observações do dia */
   dayNotes?: string
   activities: Activity[]
 }
@@ -27,7 +49,8 @@ export type Day = {
 export type Expense = {
   id: string
   dayId: string
-  category: ExpenseCategory
+  /** Em qual orçamento o gasto conta */
+  budgetId: BudgetId
   description: string
   amount: number
   createdAt: string
@@ -47,24 +70,12 @@ export type Trip = {
   days: Day[]
   expenses: Expense[]
   tips?: Tip[]
+  /** Overrides opcionais dos tetos (R$) — senão usa BUDGETS */
+  budgetLimits?: Partial<Record<BudgetId, number>>
 }
 
 export type TabId = 'hoje' | 'roteiro' | 'gastos' | 'dicas' | 'importar'
 
-export const CATEGORY_LABELS: Record<ExpenseCategory, string> = {
-  alimentacao: 'Alimentação',
-  transporte: 'Transporte',
-  hospedagem: 'Hospedagem',
-  atividades: 'Atividades',
-  compras: 'Compras',
-  outros: 'Outros',
-}
-
-export const CATEGORY_ORDER: ExpenseCategory[] = [
-  'alimentacao',
-  'transporte',
-  'hospedagem',
-  'atividades',
-  'compras',
-  'outros',
-]
+/** Compat: labels antigos de categoria → orçamento */
+export const CATEGORY_LABELS = BUDGET_LABELS
+export const CATEGORY_ORDER = BUDGET_ORDER

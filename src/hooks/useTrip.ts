@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { Expense, ExpenseCategory, Trip } from '../types'
+import type { BudgetId, Expense, Trip } from '../types'
 import { loadTrip, resetTrip, saveTrip } from '../lib/storage'
 import { uid } from '../lib/format'
 
@@ -37,14 +37,14 @@ export function useTrip() {
   const addExpense = useCallback(
     (input: {
       dayId: string
-      category: ExpenseCategory
+      budgetId: BudgetId
       description: string
       amount: number
     }) => {
       const expense: Expense = {
         id: uid('exp'),
         dayId: input.dayId,
-        category: input.category,
+        budgetId: input.budgetId,
         description: input.description.trim(),
         amount: input.amount,
         createdAt: new Date().toISOString(),
@@ -75,7 +75,6 @@ export function useTrip() {
   const activeDay = useMemo(() => {
     const match = trip.days.find((d) => d.date === todayIso)
     if (match) return match
-    // If trip hasn't started / already ended, show first unfinished day or last
     const unfinished = trip.days.find((d) => d.activities.some((a) => !a.done))
     return unfinished ?? trip.days[0]
   }, [trip.days, todayIso])

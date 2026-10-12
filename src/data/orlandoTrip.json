@@ -3,7 +3,7 @@
   "destination": "Orlando, Flórida · família",
   "startDate": "2026-11-27",
   "endDate": "2026-12-14",
-  "currency": "USD",
+  "currency": "BRL",
   "days": [
     {
       "id": "day-002",
@@ -592,5 +592,12 @@
       "tema": "Premissas desta versão",
       "texto": "\"Interpark\" foi interpretado como ICON Park. Disney Springs aparece em 29/11 e 10/12 (propositalmente: uma vez p/ ingressos+compras, outra p/ Natal). Best Buy aparece no Florida Mall (05/12) e no Millenia (08/12): vá só a um, o que tiver o produto. Tempos de carro novos são estimativas. A loja coreana é a Beauty Master (W Colonial); a moida K-Beauty saiu. Nordstrom Rack: só a de Eastgate (08/12); a de Winter Park é longe demais."
     }
-  ]
+  ],
+  "budgetLimits": {
+    "marcos": 5000,
+    "dielen": 5000,
+    "helena": 5000,
+    "alimentacao": 5000,
+    "outros": 5000
+  }
 }

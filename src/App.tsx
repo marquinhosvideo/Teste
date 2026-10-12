@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CalendarDays, Home, Lightbulb, Receipt, Upload } from 'lucide-react'
 import type { TabId } from './types'
 import { useTrip } from './hooks/useTrip'
+import { BudgetWidgets } from './components/BudgetWidgets'
 import { TodayView } from './views/TodayView'
 import { ItineraryView } from './views/ItineraryView'
 import { ExpensesView } from './views/ExpensesView'
@@ -32,6 +33,8 @@ export default function App() {
   return (
     <div className="app-shell">
       <main className="app-main">
+        <BudgetWidgets trip={trip} />
+
         {tab === 'hoje' && activeDay ? (
           <TodayView trip={trip} day={activeDay} onToggle={toggleActivity} />
         ) : null}

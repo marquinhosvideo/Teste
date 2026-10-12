@@ -58,6 +58,129 @@
   gap: 16px;
 }
 
+.budget-widgets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 4px;
+  animation: fade-up 420ms ease-out both;
+}
+
+.budget-widgets__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.budget-widgets__hint {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.budget-widgets__grid {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin: 0 -4px;
+  padding-inline: 4px;
+  scrollbar-width: none;
+}
+
+.budget-widgets__grid::-webkit-scrollbar {
+  display: none;
+}
+
+.budget-chip {
+  flex: 0 0 min(148px, 42vw);
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+
+.budget-chip__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.budget-chip h3 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 750;
+  color: var(--brand-deep);
+  margin: 0;
+}
+
+.budget-chip__pct {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-chip__spent {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 750;
+  color: var(--ink);
+  margin: 0;
+}
+
+.budget-chip__limit {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin: 2px 0 8px;
+}
+
+.budget-chip__track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(16, 38, 42, 0.08);
+  overflow: hidden;
+}
+
+.budget-chip__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--brand);
+  transition: width 420ms ease;
+}
+
+.budget-chip--marcos .budget-chip__fill,
+.budget-chip--marcos .budget-chip__pct { color: #0f6e6a; }
+.budget-chip--marcos .budget-chip__fill { background: #0f6e6a; }
+
+.budget-chip--dielen .budget-chip__fill { background: #2f78b8; }
+.budget-chip--dielen .budget-chip__pct { color: #2f78b8; }
+
+.budget-chip--helena .budget-chip__fill { background: #c45a8a; }
+.budget-chip--helena .budget-chip__pct { color: #c45a8a; }
+
+.budget-chip--alimentacao .budget-chip__fill { background: #2f9e6e; }
+.budget-chip--alimentacao .budget-chip__pct { color: #1f8a5b; }
+
+.budget-chip--outros .budget-chip__fill { background: #d08900; }
+.budget-chip--outros .budget-chip__pct { color: #b87600; }
+
+.budget-chip--over {
+  border-color: rgba(180, 35, 24, 0.35);
+}
+
+.budget-chip--over .budget-chip__pct {
+  color: var(--danger);
+}
+
 .brand-header {
   padding: 8px 4px 4px;
   animation: fade-up 500ms ease-out both;
@@ -189,12 +312,11 @@
   color: var(--ink);
 }
 
+.pill--marcos { background: #d8efec; }
+.pill--dielen { background: #dcecf8; }
+.pill--helena { background: #f7e4ee; }
 .pill--alimentacao { background: #dff3ea; }
-.pill--transporte { background: #dcecf8; }
-.pill--hospedagem { background: #efe6ff; }
-.pill--atividades { background: var(--accent-soft); }
-.pill--compras { background: #ffe4dc; }
-.pill--outros { background: #e7ebea; }
+.pill--outros { background: var(--accent-soft); }
 
 .section-head h3 {
   font-family: 'Bricolage Grotesque', sans-serif;
@@ -494,12 +616,11 @@
   transition: width 420ms ease;
 }
 
+.cat-bar__fill--marcos { background: #0f6e6a; }
+.cat-bar__fill--dielen { background: #2f78b8; }
+.cat-bar__fill--helena { background: #c45a8a; }
 .cat-bar__fill--alimentacao { background: #2f9e6e; }
-.cat-bar__fill--transporte { background: #2f78b8; }
-.cat-bar__fill--hospedagem { background: #7a5cc8; }
-.cat-bar__fill--atividades { background: #d08900; }
-.cat-bar__fill--compras { background: #d45b3a; }
-.cat-bar__fill--outros { background: #607070; }
+.cat-bar__fill--outros { background: #d08900; }
 
 .expense-form {
   padding: 16px;
@@ -599,12 +720,11 @@
   flex-shrink: 0;
 }
 
+.cat-dot--marcos { background: #0f6e6a; }
+.cat-dot--dielen { background: #2f78b8; }
+.cat-dot--helena { background: #c45a8a; }
 .cat-dot--alimentacao { background: #2f9e6e; }
-.cat-dot--transporte { background: #2f78b8; }
-.cat-dot--hospedagem { background: #7a5cc8; }
-.cat-dot--atividades { background: #d08900; }
-.cat-dot--compras { background: #d45b3a; }
-.cat-dot--outros { background: #607070; }
+.cat-dot--outros { background: #d08900; }
 
 .btn {
   display: inline-flex;

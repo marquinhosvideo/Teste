@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import type { Day, ExpenseCategory } from '../types'
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '../types'
+import type { BudgetId, Day } from '../types'
+import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
 import { formatShortDate } from '../lib/format'
 
 type Props = {
@@ -9,15 +9,15 @@ type Props = {
   currency: string
   onSubmit: (data: {
     dayId: string
-    category: ExpenseCategory
+    budgetId: BudgetId
     description: string
     amount: number
   }) => void
 }
 
-export function ExpenseForm({ days, defaultDayId, currency, onSubmit }: Props) {
+export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
   const [dayId, setDayId] = useState(defaultDayId)
-  const [category, setCategory] = useState<ExpenseCategory>('alimentacao')
+  const [budgetId, setBudgetId] = useState<BudgetId>('marcos')
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [open, setOpen] = useState(false)
@@ -26,7 +26,7 @@ export function ExpenseForm({ days, defaultDayId, currency, onSubmit }: Props) {
     e.preventDefault()
     const value = Number(amount.replace(',', '.'))
     if (!description.trim() || !Number.isFinite(value) || value <= 0) return
-    onSubmit({ dayId, category, description, amount: value })
+    onSubmit({ dayId, budgetId, description, amount: value })
     setDescription('')
     setAmount('')
     setOpen(false)
@@ -54,15 +54,15 @@ export function ExpenseForm({ days, defaultDayId, currency, onSubmit }: Props) {
       </div>
 
       <div className="field">
-        <label htmlFor="exp-cat">Categoria</label>
+        <label htmlFor="exp-budget">Orçamento</label>
         <select
-          id="exp-cat"
-          value={category}
-          onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
+          id="exp-budget"
+          value={budgetId}
+          onChange={(e) => setBudgetId(e.target.value as BudgetId)}
         >
-          {CATEGORY_ORDER.map((cat) => (
-            <option key={cat} value={cat}>
-              {CATEGORY_LABELS[cat]}
+          {BUDGET_ORDER.map((id) => (
+            <option key={id} value={id}>
+              {BUDGET_LABELS[id]}
             </option>
           ))}
         </select>
@@ -80,13 +80,13 @@ export function ExpenseForm({ days, defaultDayId, currency, onSubmit }: Props) {
       </div>
 
       <div className="field">
-        <label htmlFor="exp-amount">Valor ({currency === 'USD' ? 'US$' : currency})</label>
+        <label htmlFor="exp-amount">Valor (R$)</label>
         <input
           id="exp-amount"
           inputMode="decimal"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          placeholder="0.00"
+          placeholder="0,00"
           required
         />
       </div>

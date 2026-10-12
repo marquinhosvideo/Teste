@@ -1,6 +1,7 @@
 import type { WorkSheet } from 'xlsx'
-import type { Activity, Day, Expense, ExpenseCategory, Tip, Trip } from '../types'
+import type { Activity, BudgetId, Day, Expense, Tip, Trip } from '../types'
 import { parseAmount, uid } from './format'
+import { normalizeBudgetId } from './budgets'
 
 type XLSXModule = typeof import('xlsx')
 
@@ -8,38 +9,8 @@ async function loadXlsx(): Promise<XLSXModule> {
   return import('xlsx')
 }
 
-const CATEGORY_MAP: Record<string, ExpenseCategory> = {
-  alimentacao: 'alimentacao',
-  alimentação: 'alimentacao',
-  comida: 'alimentacao',
-  refeicao: 'alimentacao',
-  refeição: 'alimentacao',
-  transporte: 'transporte',
-  uber: 'transporte',
-  taxi: 'transporte',
-  táxi: 'transporte',
-  combustivel: 'transporte',
-  combustível: 'transporte',
-  carro: 'transporte',
-  pedágio: 'transporte',
-  pedagio: 'transporte',
-  hospedagem: 'hospedagem',
-  hotel: 'hospedagem',
-  pousada: 'hospedagem',
-  atividades: 'atividades',
-  passeio: 'atividades',
-  ingresso: 'atividades',
-  turismo: 'atividades',
-  parque: 'atividades',
-  disney: 'atividades',
-  compras: 'compras',
-  souvenir: 'compras',
-  lembranca: 'compras',
-  lembrança: 'compras',
-  outlet: 'compras',
-  outros: 'outros',
-  outro: 'outros',
-  misc: 'outros',
+function mapBudget(value: unknown): BudgetId {
+  return normalizeBudgetId(value) ?? 'outros'
 }
 
 type Row = Record<string, unknown>
@@ -86,11 +57,6 @@ function excelDateToIso(value: unknown, XLSX: XLSXModule, defaultYear = 2026): s
   }
   if (/^\d{4}-\d{2}-\d{2}/.test(text)) return text.slice(0, 10)
   return null
-}
-
-function mapCategory(value: unknown): ExpenseCategory {
-  const key = normalizeHeader(value)
-  return CATEGORY_MAP[key] ?? 'outros'
 }
 
 function formatTime(value: unknown): string | undefined {
@@ -289,7 +255,17 @@ function buildExpensesFromRows(
       return {
         id: uid('exp'),
         dayId,
-        category: mapCategory(pick(row, ['categoria', 'category', 'tipo'])),
+        budgetId: mapBudget(
+          pick(row, [
+            'orcamento',
+            'orçamento',
+            'budget',
+            'pessoa',
+            'categoria',
+            'category',
+            'tipo',
+          ]),
+        ),
         description,
         amount,
         createdAt: new Date().toISOString(),
@@ -370,12 +346,17 @@ export async function importTripFromFile(
         current.destination,
     startDate: days[0].date,
     endDate: days[days.length - 1].date,
-    currency: looksOrlando
-      ? 'USD'
-      : clean(pick(meta, ['moeda', 'currency'])) || current.currency || 'BRL',
+    currency: 'BRL',
     days,
     expenses,
     tips,
+    budgetLimits: current.budgetLimits ?? {
+      marcos: 5000,
+      dielen: 5000,
+      helena: 5000,
+      alimentacao: 5000,
+      outros: 5000,
+    },
   }
 
   return {

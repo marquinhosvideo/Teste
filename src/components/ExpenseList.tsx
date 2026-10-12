@@ -1,6 +1,6 @@
 import { Trash2 } from 'lucide-react'
 import type { Day, Expense } from '../types'
-import { CATEGORY_LABELS } from '../types'
+import { BUDGET_LABELS } from '../types'
 import { formatMoney, formatShortDate } from '../lib/format'
 
 type Props = {
@@ -26,11 +26,11 @@ export function ExpenseList({ expenses, days, currency, onRemove }: Props) {
         return (
           <li key={expense.id} className="expense-item">
             <div className="expense-item__main">
-              <span className={`cat-dot cat-dot--${expense.category}`} aria-hidden />
+              <span className={`cat-dot cat-dot--${expense.budgetId}`} aria-hidden />
               <div>
                 <p className="expense-item__title">{expense.description}</p>
                 <p className="expense-item__meta">
-                  {CATEGORY_LABELS[expense.category]}
+                  {BUDGET_LABELS[expense.budgetId]}
                   {day ? ` · ${formatShortDate(day.date)}` : ''}
                 </p>
               </div>

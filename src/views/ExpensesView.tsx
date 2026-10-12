@@ -1,17 +1,18 @@
 import { useMemo, useState } from 'react'
-import type { ExpenseCategory, Trip } from '../types'
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '../types'
+import type { BudgetId, Trip } from '../types'
+import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
 import { ExpenseForm } from '../components/ExpenseForm'
 import { ExpenseList } from '../components/ExpenseList'
 import { DayChips } from '../components/DayChips'
 import { formatMoney } from '../lib/format'
+import { spentByBudget } from '../lib/budgets'
 
 type Props = {
   trip: Trip
   defaultDayId: string
   onAdd: (data: {
     dayId: string
-    category: ExpenseCategory
+    budgetId: BudgetId
     description: string
     amount: number
   }) => void
@@ -28,19 +29,20 @@ export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
 
   const total = filtered.reduce((s, e) => s + e.amount, 0)
   const tripTotal = trip.expenses.reduce((s, e) => s + e.amount, 0)
+  const byBudget = spentByBudget(filtered)
 
-  const byCategory = CATEGORY_ORDER.map((cat) => ({
-    cat,
-    amount: filtered.filter((e) => e.category === cat).reduce((s, e) => s + e.amount, 0),
+  const bars = BUDGET_ORDER.map((id) => ({
+    id,
+    amount: byBudget[id],
   })).filter((row) => row.amount > 0)
 
-  const maxCat = Math.max(...byCategory.map((r) => r.amount), 1)
+  const maxBar = Math.max(...bars.map((r) => r.amount), 1)
 
   return (
     <section className="view">
       <header className="view-header">
         <h1>Gastos</h1>
-        <p className="muted">Separe por dia e categoria durante a viagem</p>
+        <p className="muted">Lance em Marcos, Dielen, Helena, Alimentação ou Outros</p>
       </header>
 
       <div className="totals-row">
@@ -72,18 +74,18 @@ export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
         onSelect={(id) => setFilterDayId(id)}
       />
 
-      {byCategory.length > 0 ? (
-        <div className="cat-bars" aria-label="Gastos por categoria">
-          {byCategory.map(({ cat, amount }) => (
-            <div key={cat} className="cat-bar">
+      {bars.length > 0 ? (
+        <div className="cat-bars" aria-label="Gastos por orçamento">
+          {bars.map(({ id, amount }) => (
+            <div key={id} className="cat-bar">
               <div className="cat-bar__labels">
-                <span>{CATEGORY_LABELS[cat]}</span>
+                <span>{BUDGET_LABELS[id]}</span>
                 <span>{formatMoney(amount, trip.currency)}</span>
               </div>
               <div className="cat-bar__track">
                 <div
-                  className={`cat-bar__fill cat-bar__fill--${cat}`}
-                  style={{ width: `${(amount / maxCat) * 100}%` }}
+                  className={`cat-bar__fill cat-bar__fill--${id}`}
+                  style={{ width: `${(amount / maxBar) * 100}%` }}
                 />
               </div>
             </div>
