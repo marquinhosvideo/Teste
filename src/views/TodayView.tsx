@@ -2,10 +2,11 @@ import { useMemo } from 'react'
 import type { Day, Trip } from '../types'
 import { ActivityItem } from '../components/ActivityItem'
 import { AddressCopyList } from '../components/AddressCopyList'
-import { DayNotes } from '../components/DayNotes'
-import { ProgressRing } from '../components/ProgressRing'
-import { formatDayLabel, formatMoney } from '../lib/format'
-import { extractDayAddresses } from '../lib/addresses'
+import { BudgetWidgets } from '../components/BudgetWidgets'
+import { DayHero } from '../components/DayHero'
+import { DayInfo } from '../components/DayInfo'
+import { parseDayMeta } from '../lib/dayMeta'
+import { formatMoney } from '../lib/format'
 import { spentByBudget } from '../lib/budgets'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
 
@@ -16,73 +17,55 @@ type Props = {
 }
 
 export function TodayView({ trip, day, onToggle }: Props) {
-  const done = day.activities.filter((a) => a.done).length
-  const total = day.activities.length
-  const pct = total ? (done / total) * 100 : 0
+  const dayIndex = Math.max(
+    0,
+    trip.days.findIndex((d) => d.id === day.id),
+  )
   const dayExpenses = trip.expenses.filter((e) => e.dayId === day.id)
   const dayTotal = dayExpenses.reduce((s, e) => s + e.amount, 0)
   const byBudget = spentByBudget(dayExpenses)
-  const addresses = useMemo(
-    () =>
-      extractDayAddresses({
-        dayNotes: day.dayNotes,
-        activityLocations: day.activities.map((a) => a.location),
-      }),
-    [day],
-  )
+  const { notes, places } = useMemo(() => parseDayMeta(day.dayNotes), [day.dayNotes])
 
   return (
     <section className="view today-view">
-      <header className="brand-header">
-        <p className="brand">Roteiro</p>
-        <h1>{trip.name}</h1>
-        <p className="brand-header__sub">{trip.destination}</p>
-      </header>
+      <DayHero day={day} dayIndex={dayIndex} dayCount={trip.days.length} />
 
-      <div className="today-panel">
-        <div className="today-panel__top">
-          <div>
-            <p className="eyebrow">{formatDayLabel(day.date)}</p>
-            <h2>{day.label}</h2>
-            <p className="muted">
-              {done} de {total} períodos
-            </p>
-          </div>
-          <ProgressRing value={pct} />
-        </div>
+      <BudgetWidgets trip={trip} />
 
-        <div className="spend-strip" aria-label="Gastos do dia">
-          <div>
-            <p className="spend-strip__label">Gasto do dia</p>
-            <p className="spend-strip__value">{formatMoney(dayTotal, trip.currency)}</p>
-          </div>
-          <div className="spend-strip__cats">
+      <section className="band">
+        <div className="band__inner">
+          <p className="eyebrow">Gasto do dia</p>
+          <p className="display-lg">{formatMoney(dayTotal, trip.currency)}</p>
+          <div className="spend-pills">
             {BUDGET_ORDER.filter((id) => byBudget[id] > 0).map((id) => (
-              <span key={id} className={`pill pill--${id}`}>
+              <span key={id} className="hairline-pill">
                 {BUDGET_LABELS[id]} {formatMoney(byBudget[id], trip.currency)}
               </span>
             ))}
-            {!dayExpenses.length ? <span className="muted">Sem gastos ainda</span> : null}
+            {!dayExpenses.length ? (
+              <span className="muted">Sem gastos ainda.</span>
+            ) : null}
           </div>
         </div>
-      </div>
+      </section>
 
-      <DayNotes notes={day.dayNotes} />
+      <section className="band">
+        <div className="band__inner">
+          <h2 className="section-title">Programação.</h2>
+          <div className="activity-stack">
+            {day.activities.map((activity) => (
+              <ActivityItem
+                key={activity.id}
+                activity={activity}
+                onToggle={() => onToggle(day.id, activity.id)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <div className="section-head">
-        <h3>Programação</h3>
-      </div>
-      <div className="activity-stack">
-        {day.activities.map((activity) => (
-          <ActivityItem
-            key={activity.id}
-            activity={activity}
-            onToggle={() => onToggle(day.id, activity.id)}
-          />
-        ))}
-      </div>
-
-      <AddressCopyList addresses={addresses} />
+      <DayInfo notes={notes} />
+      <AddressCopyList places={places} />
     </section>
   )
 }

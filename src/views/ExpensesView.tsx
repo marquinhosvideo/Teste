@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
 import type { BudgetId, Trip } from '../types'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
+import { DayChips } from '../components/DayChips'
 import { ExpenseForm } from '../components/ExpenseForm'
 import { ExpenseList } from '../components/ExpenseList'
 import { ReceiptScanButton } from '../components/ReceiptScanButton'
-import { DayChips } from '../components/DayChips'
 import { formatMoney } from '../lib/format'
 import { spentByBudget } from '../lib/budgets'
 
@@ -21,14 +21,14 @@ type Props = {
 }
 
 export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
-  const [filterDayId, setFilterDayId] = useState<string | 'all'>('all')
+  const [filterDayId, setFilterDayId] = useState<string>('all')
 
   const filtered = useMemo(() => {
     if (filterDayId === 'all') return trip.expenses
     return trip.expenses.filter((e) => e.dayId === filterDayId)
   }, [trip.expenses, filterDayId])
 
-  const total = filtered.reduce((s, e) => s + e.amount, 0)
+  const filterTotal = filtered.reduce((s, e) => s + e.amount, 0)
   const tripTotal = trip.expenses.reduce((s, e) => s + e.amount, 0)
   const byBudget = spentByBudget(filtered)
 
@@ -41,84 +41,85 @@ export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
 
   return (
     <section className="view">
-      <header className="view-header">
-        <h1>Gastos</h1>
-        <p className="muted">Lance em Marcos, Dielen, Helena, Alimentação ou Outros</p>
-      </header>
-
-      <div className="totals-row">
-        <div>
-          <p className="spend-strip__label">Total da viagem</p>
-          <p className="totals-row__value">{formatMoney(tripTotal, trip.currency)}</p>
-        </div>
-        <div>
-          <p className="spend-strip__label">Filtro atual</p>
-          <p className="totals-row__value totals-row__value--sm">
-            {formatMoney(total, trip.currency)}
+      <section className="band band--dark band--hero">
+        <div className="band__inner">
+          <p className="eyebrow eyebrow--on-dark">Gastos</p>
+          <p className="display-hero">{formatMoney(tripTotal, trip.currency)}</p>
+          <p className="lede lede--on-dark">
+            Total da viagem.
+            {filterDayId !== 'all'
+              ? ` Filtro: ${formatMoney(filterTotal, trip.currency)}.`
+              : ''}
           </p>
         </div>
-      </div>
+      </section>
 
-      <div className="filter-row">
-        <button
-          type="button"
-          className={`day-chip ${filterDayId === 'all' ? 'day-chip--active' : ''}`}
-          onClick={() => setFilterDayId('all')}
-        >
-          <span className="day-chip__index">Todos</span>
-          <span className="day-chip__progress">{trip.expenses.length}</span>
-        </button>
-      </div>
-      <DayChips
-        days={trip.days}
-        selectedId={filterDayId === 'all' ? '' : filterDayId}
-        onSelect={(id) => setFilterDayId(id)}
-      />
+      <section className="band band--parchment band--chips">
+        <DayChips
+          days={trip.days}
+          selectedId={filterDayId}
+          onSelect={setFilterDayId}
+          includeAll
+          allMeta={`${trip.expenses.length} gastos`}
+          metaForDay={(day) =>
+            formatMoney(
+              trip.expenses
+                .filter((e) => e.dayId === day.id)
+                .reduce((s, e) => s + e.amount, 0),
+              trip.currency,
+            )
+          }
+        />
+      </section>
 
-      {bars.length > 0 ? (
-        <div className="cat-bars" aria-label="Gastos por orçamento">
-          {bars.map(({ id, amount }) => (
-            <div key={id} className="cat-bar">
-              <div className="cat-bar__labels">
-                <span>{BUDGET_LABELS[id]}</span>
-                <span>{formatMoney(amount, trip.currency)}</span>
-              </div>
-              <div className="cat-bar__track">
-                <div
-                  className={`cat-bar__fill cat-bar__fill--${id}`}
-                  style={{ width: `${(amount / maxBar) * 100}%` }}
-                />
-              </div>
+      <section className="band">
+        <div className="band__inner band__inner--stack">
+          {bars.length > 0 ? (
+            <div className="cat-bars" aria-label="Gastos por orçamento">
+              {bars.map(({ id, amount }) => (
+                <div key={id} className="cat-bar">
+                  <div className="cat-bar__labels">
+                    <span>{BUDGET_LABELS[id]}</span>
+                    <span>{formatMoney(amount, trip.currency)}</span>
+                  </div>
+                  <div className="cat-bar__track">
+                    <div
+                      className="cat-bar__fill"
+                      style={{ width: `${(amount / maxBar) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          ) : null}
+
+          <div className="expense-actions">
+            <ExpenseForm
+              days={trip.days}
+              defaultDayId={defaultDayId}
+              currency={trip.currency}
+              onSubmit={onAdd}
+            />
+            <ReceiptScanButton
+              days={trip.days}
+              defaultDayId={defaultDayId}
+              currency={trip.currency}
+              onConfirm={async (items) => {
+                for (const item of items) {
+                  await onAdd(item)
+                }
+              }}
+            />
+          </div>
+
+          <ExpenseList
+            expenses={filtered}
+            days={trip.days}
+            currency={trip.currency}
+            onRemove={onRemove}
+          />
         </div>
-      ) : null}
-
-      <div className="expense-actions">
-        <ExpenseForm
-          days={trip.days}
-          defaultDayId={defaultDayId}
-          currency={trip.currency}
-          onSubmit={onAdd}
-        />
-        <ReceiptScanButton
-          days={trip.days}
-          defaultDayId={defaultDayId}
-          currency={trip.currency}
-          onConfirm={async (items) => {
-            for (const item of items) {
-              await onAdd(item)
-            }
-          }}
-        />
-      </div>
-
-      <ExpenseList
-        expenses={filtered}
-        days={trip.days}
-        currency={trip.currency}
-        onRemove={onRemove}
-      />
+      </section>
     </section>
   )
 }

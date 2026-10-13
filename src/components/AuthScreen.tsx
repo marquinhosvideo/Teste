@@ -47,11 +47,14 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
 
   return (
     <div className="auth-screen">
+      <header className="global-nav">
+        <p className="global-nav__brand">Orlando 2026</p>
+      </header>
       <div className="auth-card">
-        <p className="brand">Roteiro</p>
-        <h1>Orlando 2026</h1>
-        <p className="muted">
-          Acesso restrito à família. Só e-mails autorizados podem entrar.
+        <p className="eyebrow">Família</p>
+        <h1 className="display-lg">Entrar.</h1>
+        <p className="lede">
+          Acesso restrito. Só e-mails autorizados podem sincronizar o roteiro.
         </p>
 
         {allowed.length > 0 ? (
@@ -115,13 +118,17 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
 
         <button
           type="button"
-          className="btn btn--ghost btn--block"
+          className="btn btn--ghost-pill btn--block"
           onClick={() => setMode((m) => (m === 'login' ? 'signup' : 'login'))}
         >
           {mode === 'login' ? 'Primeira vez? Criar conta' : 'Já tem conta? Entrar'}
         </button>
 
-        <button type="button" className="btn btn--ghost btn--block" onClick={() => void handleTest()}>
+        <button
+          type="button"
+          className="btn btn--ghost-pill btn--block"
+          onClick={() => void handleTest()}
+        >
           <Wifi size={18} />
           Testar conexão com Supabase
         </button>

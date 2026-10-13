@@ -5,7 +5,6 @@ import { useAuth } from './hooks/useAuth'
 import { useTrip } from './hooks/useTrip'
 import { isSupabaseConfigured } from './lib/supabase'
 import { AuthScreen } from './components/AuthScreen'
-import { BudgetWidgets } from './components/BudgetWidgets'
 import { SetupBanner } from './components/SetupBanner'
 import { SyncBadge } from './components/SyncBadge'
 import { UpdatePasswordScreen } from './components/UpdatePasswordScreen'
@@ -40,9 +39,17 @@ export default function App() {
     removeExpense,
   } = useTrip(remoteEnabled)
 
+  function selectTab(id: TabId) {
+    setTab(id)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   if (isSupabaseConfigured && !auth.ready) {
     return (
       <div className="app-shell">
+        <header className="global-nav">
+          <p className="global-nav__brand">Orlando 2026</p>
+        </header>
         <main className="app-main">
           <p className="muted">Carregando…</p>
         </main>
@@ -75,17 +82,21 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <header className="global-nav">
+        <p className="global-nav__brand">Orlando 2026</p>
+      </header>
+
       <main className="app-main">
         {!isSupabaseConfigured ? <SetupBanner /> : null}
 
-        <SyncBadge
-          state={syncState}
-          error={syncError}
-          email={auth.user?.email}
-          onSignOut={isSupabaseConfigured ? () => void auth.signOut() : undefined}
-        />
-
-        <BudgetWidgets trip={trip} />
+        <div className="sync-row">
+          <SyncBadge
+            state={syncState}
+            error={syncError}
+            email={auth.user?.email}
+            onSignOut={isSupabaseConfigured ? () => void auth.signOut() : undefined}
+          />
+        </div>
 
         {tab === 'hoje' && activeDay ? (
           <TodayView trip={trip} day={activeDay} onToggle={toggleActivity} />
@@ -110,7 +121,6 @@ export default function App() {
           <ImportView
             trip={trip}
             onImported={(next) => {
-              // Mantém gastos/checks já sincronizados na nuvem
               const checkMap = new Map<string, boolean>()
               for (const day of trip.days) {
                 for (const act of day.activities) checkMap.set(act.id, act.done)
@@ -133,20 +143,25 @@ export default function App() {
       </main>
 
       <nav className="tab-bar" aria-label="Navegação principal">
-        {TABS.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            type="button"
-            className={`tab-bar__btn ${tab === id ? 'tab-bar__btn--active' : ''}`}
-            onClick={() => setTab(id)}
-            aria-current={tab === id ? 'page' : undefined}
-            aria-label={label}
-            data-tab={id}
-          >
-            <Icon size={18} strokeWidth={tab === id ? 2.25 : 1.75} aria-hidden />
-            <span>{label}</span>
-          </button>
-        ))}
+        <div className="tab-bar__inner">
+          {TABS.map(({ id, label, icon: Icon }) => {
+            const active = tab === id
+            return (
+              <button
+                key={id}
+                type="button"
+                className={`tab-bar__btn ${active ? 'tab-bar__btn--active' : ''}`}
+                onClick={() => selectTab(id)}
+                aria-current={active ? 'page' : undefined}
+                aria-label={label}
+                data-tab={id}
+              >
+                <Icon size={20} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
+                <span>{label}</span>
+              </button>
+            )
+          })}
+        </div>
       </nav>
     </div>
   )

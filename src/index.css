@@ -1,12 +1,14 @@
 :root {
   color-scheme: light;
-  font-family: 'Figtree', system-ui, sans-serif;
-  line-height: 1.45;
-  font-weight: 450;
+  font-family: var(--font-text);
+  line-height: 1.47;
+  font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-ink);
+  background: var(--color-canvas);
 }
 
 *,
@@ -47,4 +49,15 @@ ul,
 ol {
   margin: 0;
   padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
 }

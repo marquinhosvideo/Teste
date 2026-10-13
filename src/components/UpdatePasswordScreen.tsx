@@ -35,10 +35,13 @@ export function UpdatePasswordScreen({ email, onSubmit }: Props) {
 
   return (
     <div className="auth-screen">
+      <header className="global-nav">
+        <p className="global-nav__brand">Orlando 2026</p>
+      </header>
       <div className="auth-card">
-        <p className="brand">Roteiro</p>
-        <h1>Nova senha</h1>
-        <p className="muted">
+        <p className="eyebrow">Conta</p>
+        <h1 className="display-lg">Nova senha.</h1>
+        <p className="lede">
           Defina uma senha para {email || 'sua conta'} e entre no roteiro da família.
         </p>
 

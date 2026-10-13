@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import type { BudgetId, Day } from '../types'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
+import { stripEmoji } from '../lib/display'
 import { formatShortDate } from '../lib/format'
 
 type Props = {
@@ -34,7 +35,7 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
 
   if (!open) {
     return (
-      <button type="button" className="btn btn--primary btn--block" onClick={() => setOpen(true)}>
+      <button type="button" className="btn btn--primary" onClick={() => setOpen(true)}>
         Registrar gasto
       </button>
     )
@@ -42,30 +43,33 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
 
   return (
     <form className="expense-form" onSubmit={handleSubmit}>
+      <h3 className="expense-form__title">Novo gasto.</h3>
+
       <div className="field">
         <label htmlFor="exp-day">Dia</label>
         <select id="exp-day" value={dayId} onChange={(e) => setDayId(e.target.value)}>
           {days.map((day, i) => (
             <option key={day.id} value={day.id}>
-              D{i + 1} · {formatShortDate(day.date)} · {day.label}
+              D{i + 1} · {formatShortDate(day.date)} · {stripEmoji(day.label)}
             </option>
           ))}
         </select>
       </div>
 
       <div className="field">
-        <label htmlFor="exp-budget">Orçamento</label>
-        <select
-          id="exp-budget"
-          value={budgetId}
-          onChange={(e) => setBudgetId(e.target.value as BudgetId)}
-        >
+        <span className="field__label">Orçamento</span>
+        <div className="chip-picks">
           {BUDGET_ORDER.map((id) => (
-            <option key={id} value={id}>
-              {BUDGET_LABELS[id]}
-            </option>
+            <button
+              key={id}
+              type="button"
+              className={`option-chip option-chip--compact ${budgetId === id ? 'option-chip--selected' : ''}`}
+              onClick={() => setBudgetId(id)}
+            >
+              <span className="option-chip__label">{BUDGET_LABELS[id]}</span>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
 
       <div className="field">
@@ -74,7 +78,7 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
           id="exp-desc"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Ex.: almoço, ingressos, Uber"
+          placeholder="Almoço, ingressos, Uber"
           required
         />
       </div>
@@ -92,7 +96,7 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
       </div>
 
       <div className="expense-form__actions">
-        <button type="button" className="btn btn--ghost" onClick={() => setOpen(false)}>
+        <button type="button" className="btn btn--ghost-pill" onClick={() => setOpen(false)}>
           Cancelar
         </button>
         <button type="submit" className="btn btn--primary">

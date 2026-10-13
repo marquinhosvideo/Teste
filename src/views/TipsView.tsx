@@ -1,36 +1,47 @@
 import type { Tip } from '../types'
+import { stripEmoji, tipIcon } from '../lib/display'
 
 type Props = {
   tips?: Tip[]
 }
 
 export function TipsView({ tips }: Props) {
-  if (!tips?.length) {
-    return (
-      <section className="view">
-        <header className="view-header">
-          <h1>Dicas</h1>
-          <p className="muted">Nenhuma dica importada ainda.</p>
-        </header>
-      </section>
-    )
-  }
-
   return (
     <section className="view">
-      <header className="view-header">
-        <h1>Dicas</h1>
-        <p className="muted">Ressalvas da planilha para a viagem a Orlando</p>
-      </header>
+      <section className="band band--parchment band--hero">
+        <div className="band__inner">
+          <p className="eyebrow">Dicas</p>
+          <h1 className="display-lg">Antes de sair.</h1>
+          <p className="lede">
+            {tips?.length
+              ? 'Ressalvas da planilha para Orlando.'
+              : 'Nenhuma dica importada ainda.'}
+          </p>
+        </div>
+      </section>
 
-      <div className="tips-stack">
-        {tips.map((tip) => (
-          <article key={tip.tema} className="tip-card">
-            <h2>{tip.tema}</h2>
-            <p>{tip.texto}</p>
-          </article>
-        ))}
-      </div>
+      {tips?.length ? (
+        <section className="band">
+          <div className="band__inner">
+            <div className="tips-stack">
+              {tips.map((tip) => {
+                const Icon = tipIcon(tip.tema)
+                return (
+                  <article key={tip.tema} className="tip-row">
+                    <span className="tip-row__icon" aria-hidden>
+                      <Icon size={18} />
+                    </span>
+                    <div>
+                      <h2>{stripEmoji(tip.tema)}</h2>
+                      <p>{stripEmoji(tip.texto)}</p>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      ) : null}
     </section>
   )
 }

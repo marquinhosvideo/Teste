@@ -106,11 +106,11 @@ export function ReceiptScanButton({
       <>
         <button
           type="button"
-          className="btn btn--ghost btn--block"
+          className="btn btn--ghost-pill"
           onClick={() => inputRef.current?.click()}
         >
           <Camera size={18} />
-          Foto da nota
+          Escanear recibo
         </button>
         <input
           ref={inputRef}

@@ -12,40 +12,37 @@ type Props = {
 
 export function ExpenseList({ expenses, days, currency, onRemove }: Props) {
   if (!expenses.length) {
-    return (
-      <p className="empty-hint">Nenhum gasto registrado ainda. Toque em “Registrar gasto”.</p>
-    )
+    return <p className="empty-hint">Nenhum gasto neste filtro.</p>
   }
 
-  const dayMap = new Map(days.map((d) => [d.id, d]))
+  const dayMap = new Map(days.map((d, i) => [d.id, { day: d, index: i }]))
 
   return (
     <ul className="expense-list">
       {expenses.map((expense) => {
-        const day = dayMap.get(expense.dayId)
+        const entry = dayMap.get(expense.dayId)
         return (
           <li key={expense.id} className="expense-item">
             <div className="expense-item__main">
-              <span className={`cat-dot cat-dot--${expense.budgetId}`} aria-hidden />
-              <div>
-                <p className="expense-item__title">{expense.description}</p>
-                <p className="expense-item__meta">
-                  {BUDGET_LABELS[expense.budgetId]}
-                  {day ? ` · ${formatShortDate(day.date)}` : ''}
-                </p>
-              </div>
+              <p className="expense-item__title">{expense.description}</p>
+              <p className="expense-item__meta">
+                {BUDGET_LABELS[expense.budgetId]}
+                {entry
+                  ? ` · D${entry.index + 1} · ${formatShortDate(entry.day.date)}`
+                  : ''}
+              </p>
             </div>
-            <div className="expense-item__side">
-              <span className="expense-item__amount">{formatMoney(expense.amount, currency)}</span>
-              <button
-                type="button"
-                className="icon-btn"
-                aria-label="Remover gasto"
-                onClick={() => onRemove(expense.id)}
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
+            <p className="expense-item__amount">
+              {formatMoney(expense.amount, currency)}
+            </p>
+            <button
+              type="button"
+              className="icon-btn"
+              aria-label="Remover gasto"
+              onClick={() => onRemove(expense.id)}
+            >
+              <Trash2 size={18} />
+            </button>
           </li>
         )
       })}

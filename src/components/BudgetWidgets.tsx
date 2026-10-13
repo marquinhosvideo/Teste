@@ -10,39 +10,44 @@ export function BudgetWidgets({ trip }: Props) {
   const budgets = getBudgets(trip)
   const spent = spentByBudget(trip.expenses)
   const currency = trip.currency || 'BRL'
+  const tripTotal = trip.expenses.reduce((s, e) => s + e.amount, 0)
 
   return (
-    <section className="budget-widgets" aria-label="Orçamentos da viagem">
-      <div className="budget-widgets__head">
-        <p className="eyebrow">Orçamentos</p>
-      </div>
-      <div className="budget-widgets__grid">
-        {budgets.map((budget) => {
-          const value = spent[budget.id] ?? 0
-          const pct = budgetPercent(value, budget.limit)
-          const over = value > budget.limit
-          return (
-            <article
-              key={budget.id}
-              className={`budget-chip budget-chip--${budget.id} ${over ? 'budget-chip--over' : ''}`}
-            >
-              <div className="budget-chip__top">
-                <h3>{budget.label}</h3>
-                <span className="budget-chip__pct">{Math.round(pct)}%</span>
-              </div>
-              <p className="budget-chip__spent">{formatMoney(value, currency)}</p>
-              <p className="budget-chip__limit">
-                de {formatMoney(budget.limit, currency)}
-              </p>
-              <div className="budget-chip__track" aria-hidden>
-                <div
-                  className="budget-chip__fill"
-                  style={{ width: `${Math.min(100, pct)}%` }}
-                />
-              </div>
-            </article>
-          )
-        })}
+    <section className="band band--parchment">
+      <div className="band__inner">
+        <div className="budget-widgets__head">
+          <h2 className="section-title">Orçamentos.</h2>
+          <p className="section-sub">{formatMoney(tripTotal, currency)} gastos</p>
+        </div>
+        <div className="budget-widgets__grid">
+          {budgets.map((budget) => {
+            const value = spent[budget.id] ?? 0
+            const pct = budgetPercent(value, budget.limit)
+            const over = value > budget.limit
+            return (
+              <article
+                key={budget.id}
+                className={`utility-card ${over ? 'utility-card--over' : ''}`}
+              >
+                <p className="utility-card__eyebrow">{Math.round(pct)}%</p>
+                <h3 className="utility-card__title">{budget.label}</h3>
+                <p className="utility-card__price">{formatMoney(value, currency)}</p>
+                <p className="utility-card__footnote">
+                  de {formatMoney(budget.limit, currency)}
+                </p>
+                <div className="utility-card__track" aria-hidden>
+                  <div
+                    className="utility-card__fill"
+                    style={{
+                      width: `${Math.min(100, pct)}%`,
+                      background: over ? 'var(--color-ink)' : 'var(--color-primary)',
+                    }}
+                  />
+                </div>
+              </article>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

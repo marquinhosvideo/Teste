@@ -11,7 +11,7 @@ export function formatMoney(amount: number, currency = 'BRL'): string {
 export function formatDayLabel(dateIso: string): string {
   const date = parseISO(dateIso)
   if (!isValid(date)) return dateIso
-  return format(date, "EEE, d 'de' MMM", { locale: ptBR })
+  return format(date, "EEEE, d 'de' MMMM", { locale: ptBR })
 }
 
 export function formatShortDate(dateIso: string): string {

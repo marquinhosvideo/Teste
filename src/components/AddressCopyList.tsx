@@ -1,50 +1,53 @@
 import { useState } from 'react'
-import { Check, Copy, MapPin } from 'lucide-react'
+import { MapPin } from 'lucide-react'
+import type { DayPlace } from '../lib/dayMeta'
 import { copyText } from '../lib/addresses'
 
 type Props = {
-  addresses: string[]
-  title?: string
+  places: DayPlace[]
 }
 
-export function AddressCopyList({ addresses, title = 'Endereços para o Waze' }: Props) {
+export function AddressCopyList({ places }: Props) {
   const [copied, setCopied] = useState<string | null>(null)
-  if (!addresses.length) return null
+  if (!places.length) return null
 
-  async function handleCopy(address: string) {
-    const ok = await copyText(address)
+  async function handleCopy(place: DayPlace) {
+    const ok = await copyText(place.copyText)
     if (!ok) return
-    setCopied(address)
-    window.setTimeout(() => setCopied((c) => (c === address ? null : c)), 1600)
+    setCopied(place.copyText)
+    window.setTimeout(
+      () => setCopied((c) => (c === place.copyText ? null : c)),
+      1600,
+    )
   }
 
   return (
-    <section className="address-list" aria-label={title}>
-      <div className="section-head">
-        <h3>{title}</h3>
-        <p className="muted">Toque em copiar e cole no Waze</p>
+    <section className="band">
+      <div className="band__inner">
+        <h2 className="section-title">Endereços.</h2>
+        <p className="section-sub">Copie e cole no Waze.</p>
+        <ul className="address-list">
+          {places.map((place) => {
+            const isCopied = copied === place.copyText
+            return (
+              <li key={place.copyText} className="address-card">
+                <MapPin size={18} aria-hidden className="address-card__pin" />
+                <div className="address-card__text">
+                  <p className="address-card__name">{place.name}</p>
+                  <p className="address-card__addr">{place.addr}</p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn--pearl"
+                  onClick={() => void handleCopy(place)}
+                >
+                  {isCopied ? 'Copiado.' : 'Copiar'}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
       </div>
-      <ul className="address-list__items">
-        {addresses.map((address) => {
-          const isCopied = copied === address
-          return (
-            <li key={address} className="address-card">
-              <div className="address-card__text">
-                <MapPin size={16} aria-hidden />
-                <p>{address}</p>
-              </div>
-              <button
-                type="button"
-                className={`btn btn--ghost address-card__copy ${isCopied ? 'address-card__copy--ok' : ''}`}
-                onClick={() => void handleCopy(address)}
-              >
-                {isCopied ? <Check size={16} /> : <Copy size={16} />}
-                {isCopied ? 'Copiado' : 'Copiar'}
-              </button>
-            </li>
-          )
-        })}
-      </ul>
     </section>
   )
 }
