@@ -28,6 +28,11 @@ Este guia liga o banco (checks e gastos) ao app do repositório
 5. Deve aparecer sucesso. Confira em **Table Editor**:
    - `activity_checks`
    - `expenses`
+   - `trip_document` (roteiro atual compartilhado)
+   - `trip_versions` (até 5 históricos para desfazer importação ruim)
+
+Se o projeto **já tinha** o schema antigo (só checks/gastos), rode também
+[`supabase/trip_versions.sql`](./supabase/trip_versions.sql) no SQL Editor.
 
 ### 3. Ativar Realtime (para atualizar ao vivo)
 
@@ -305,8 +310,9 @@ No Vercel: **Project → Settings → Environment Variables** → edite →
 ## Parte 3 — Checklist rápido
 
 - [ ] Projeto Supabase criado  
-- [ ] `schema.sql` executado (tabelas `activity_checks` e `expenses`)  
-- [ ] Realtime ligado nas duas tabelas  
+- [ ] `schema.sql` executado (tabelas `activity_checks`, `expenses`, `trip_document`, `trip_versions`)  
+  — ou `trip_versions.sql` se o projeto já existia  
+- [ ] Realtime ligado em `activity_checks`, `expenses` e `trip_document`  
 - [ ] Confirm email desativado  
 - [ ] `.env` local **ou** variáveis no Vercel/Netlify  
 - [ ] Conta da família criada no app  
@@ -320,8 +326,12 @@ No Vercel: **Project → Settings → Environment Variables** → edite →
 | --- | --- |
 | `activity_checks` | Check de cada atividade (feito / não feito) |
 | `expenses` | Gastos (dia, orçamento, descrição, valor) |
+| `trip_document` | Roteiro atual (dias, dicas, etc.) compartilhado entre aparelhos |
+| `trip_versions` | Até 5 snapshots anteriores (antes de importar / restaurar) |
 
-O texto do roteiro (Manhã/Tarde/Noite) continua no app / Excel. Só o **estado ao vivo** vai para o Supabase.
+Na aba **Excel**, cada importação (ou restauração do roteiro amostra) grava o estado
+anterior em `trip_versions`. **Restaurar** uma versão reescreve o roteiro, checks e
+gastos no banco — qualquer aparelho logado vê o mesmo resultado.
 
 ---
 
