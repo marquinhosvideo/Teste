@@ -215,33 +215,90 @@ npm run dev
 8. Marque um check ou registre um gasto → o badge deve mostrar **Nuvem ao vivo**.
 9. Em outro navegador/celular (mesmo Wi‑Fi ou túnel), entre com a **mesma conta** e confira se aparece igual.
 
-### Opção B — Publicar o site (Vercel / Netlify) a partir do GitHub
+### Opção B — Publicar na internet com Vercel (recomendado)
 
-Assim a família acessa pela internet, não só no seu PC.
+Assim a família abre o app no celular por um link `https://....vercel.app`, sem `npm run dev`.
 
-#### Vercel (exemplo)
+#### 1) Garanta que o código está no GitHub
 
-1. Acesse [https://vercel.com](https://vercel.com) e faça login com **GitHub**.
-2. **Add New Project** → importe `marquinhosvideo/Teste`.
-3. Em **Environment Variables**, adicione:
+A branch com o app completo é:
 
-| Name | Value |
-| --- | --- |
-| `VITE_SUPABASE_URL` | `https://xxxx.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | sua anon key |
+`cursor/familia-viagem-tracker-7f72`
 
-4. Framework: **Vite** (detecta sozinho). Build: `npm run build`, output: `dist`.
-5. Deploy.
-6. Abra a URL gerada (ex.: `https://teste-xxx.vercel.app`) → login da família → pronto.
+No seu PC (se ainda não atualizou):
+
+```bash
+git fetch origin
+git checkout cursor/familia-viagem-tracker-7f72
+git pull origin cursor/familia-viagem-tracker-7f72
+```
+
+#### 2) Crie a conta e importe o projeto
+
+1. Abra [https://vercel.com](https://vercel.com)
+2. **Continue with GitHub** e autorize o acesso ao repo `marquinhosvideo/Teste`
+3. Clique em **Add New… → Project**
+4. Selecione o repositório **Teste**
+5. Em **Configure Project**:
+   - **Framework Preset:** Vite (geralmente detecta sozinho)
+   - **Root Directory:** `.` (raiz)
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+   - **Install Command:** `npm install`
+6. Em **Branch**: escolha `cursor/familia-viagem-tracker-7f72`  
+   (ou `main`, se você já tiver feito merge do PR)
+
+#### 3) Variáveis de ambiente (obrigatório)
+
+Antes de clicar em Deploy, abra **Environment Variables** e adicione **as 3**:
+
+| Name | Value (exemplo) | Ambientes |
+| --- | --- | --- |
+| `VITE_SUPABASE_URL` | `https://twcztkpxoyoxarlkfedy.supabase.co` | Production, Preview, Development |
+| `VITE_SUPABASE_ANON_KEY` | sua chave `eyJ...` (Legacy anon) ou `sb_publishable_...` | Production, Preview, Development |
+| `VITE_ALLOWED_EMAILS` | `marcos.coelho19@gmail.com,dielen.brum@hotmail.com` | Production, Preview, Development |
+
+Marque Production + Preview em cada uma.
+
+> Use os **mesmos valores do seu `.env` local**.  
+> Nunca coloque a chave `service_role` / `sb_secret_...`.
+
+#### 4) Deploy
+
+1. Clique em **Deploy**
+2. Espere o build ficar verde (1–2 min)
+3. Clique em **Visit** — URL tipo:  
+   `https://teste-xxxxx.vercel.app`
+
+#### 5) Ajuste o Supabase para a URL pública
+
+1. Supabase → **Authentication → URL Configuration**
+2. **Site URL:** cole a URL do Vercel  
+   ex.: `https://teste-xxxxx.vercel.app`
+3. Em **Redirect URLs**, adicione:
+   - `https://teste-xxxxx.vercel.app/**`
+   - `http://localhost:5173/**` (para continuar testando no PC)
+4. Salve
+
+#### 6) Teste no celular
+
+1. Abra a URL do Vercel no Chrome/Safari
+2. Entre com o e-mail autorizado
+3. Marque um check / lance um gasto
+4. Em outro aparelho, com o outro e-mail (ou o mesmo), confira se atualiza
+
+#### Se mudar o `.env` / variáveis depois
+
+No Vercel: **Project → Settings → Environment Variables** → edite →  
+**Deployments → Redeploy** (senão o site continua com a build antiga).
 
 #### Netlify (alternativa)
 
-1. [https://netlify.com](https://netlify.com) → login com GitHub → **Add new site** → import repo.
-2. Build command: `npm run build` · Publish directory: `dist`.
-3. **Site settings → Environment variables** → mesmas `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
-4. Deploy.
-
-> As variáveis `VITE_*` entram no build do frontend. Por isso usamos só a chave **anon** + RLS (só usuário logado lê/escreve).
+1. [https://netlify.com](https://netlify.com) → login com GitHub → import repo
+2. Branch: `cursor/familia-viagem-tracker-7f72`
+3. Build: `npm run build` · Publish: `dist`
+4. Mesmas 3 variáveis `VITE_*`
+5. Ajuste Site URL / Redirect no Supabase para a URL da Netlify
 
 ---
 
