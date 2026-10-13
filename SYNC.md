@@ -1,7 +1,7 @@
 # Passo a passo: Supabase + projeto GitHub
 
 Este guia liga o banco (checks e gastos) ao app do repositório
-`https://github.com/marquinhosvideo/Teste` (branch do Roteiro Orlando).
+`https://github.com/marquinhosvideo/Viagem` (branch do Roteiro Orlando).
 
 ---
 
@@ -133,8 +133,8 @@ No `.env` do nosso app, a chave pública vai em `VITE_SUPABASE_ANON_KEY`
 1. Clone o repositório (ou abra no Cursor / VS Code):
 
 ```bash
-git clone https://github.com/marquinhosvideo/Teste.git
-cd Teste
+git clone https://github.com/marquinhosvideo/Viagem.git
+cd Viagem
 git checkout cursor/familia-viagem-tracker-7f72
 ```
 
@@ -158,7 +158,7 @@ Isso cria um arquivo chamado `.env` copiado do modelo `.env.example`.
 
 ##### No Cursor / VS Code (recomendado)
 
-1. Na barra lateral de **arquivos** (Explorer), na raiz do projeto `Teste`, procure `.env`.  
+1. Na barra lateral de **arquivos** (Explorer), na raiz do projeto `Viagem`, procure `.env`.  
    Se não aparecer: arquivos que começam com ponto às vezes ficam ocultos — use `Ctrl+P` (ou `Cmd+P` no Mac), digite `.env` e Enter.
 2. Abra o arquivo. Você verá algo assim:
 
@@ -241,9 +241,9 @@ git pull origin cursor/familia-viagem-tracker-7f72
 #### 2) Crie a conta e importe o projeto
 
 1. Abra [https://vercel.com](https://vercel.com)
-2. **Continue with GitHub** e autorize o acesso ao repo `marquinhosvideo/Teste`
+2. **Continue with GitHub** e autorize o acesso ao repo `marquinhosvideo/Viagem`
 3. Clique em **Add New… → Project**
-4. Selecione o repositório **Teste**
+4. Selecione o repositório **Viagem**
 5. Em **Configure Project**:
    - **Framework Preset:** Vite (geralmente detecta sozinho)
    - **Root Directory:** `.` (raiz)
