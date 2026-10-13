@@ -1,15 +1,20 @@
 import { Settings } from 'lucide-react'
+import { supabaseConfigError } from '../lib/supabase'
 
 export function SetupBanner() {
   return (
     <aside className="setup-banner">
       <Settings size={18} />
       <div>
-        <strong>Modo local</strong>
+        <strong>Modo local / sem nuvem</strong>
         <p>
-          O Vite só lê o arquivo <code>.env</code> (não o <code>.env.example</code>). Na raiz do
-          projeto: <code>cp .env.example .env</code>, preencha URL/chave, reinicie{' '}
-          <code>npm run dev</code>. Guia em <code>SYNC.md</code>.
+          {supabaseConfigError ??
+            'Configure o arquivo .env (não o .env.example) e reinicie o npm run dev.'}
+        </p>
+        <p>
+          Depois que o `.env` estiver certo, <strong>não rode</strong>{' '}
+          <code>cp .env.example .env</code> de novo — isso sobrescreve suas chaves e o login
+          volta a falhar.
         </p>
       </div>
     </aside>
