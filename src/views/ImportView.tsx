@@ -47,8 +47,9 @@ export function ImportView({ trip, onImported, onReset }: Props) {
           <FileSpreadsheet size={40} strokeWidth={1.5} className="import-icon" />
           <h1 className="display-lg">Planilha.</h1>
           <p className="lede">
-            Importe o Excel do roteiro para atualizar dias e dicas. Gastos e marcações
-            já feitos são mantidos.
+            Importe o Excel do roteiro para atualizar dias e dicas. Gastos na planilha
+            entram em US$ e são convertidos para reais. Marcações já feitas no app são
+            mantidas quando possível.
           </p>
           <div className="import-actions">
             <button

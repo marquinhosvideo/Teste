@@ -43,10 +43,13 @@ export function parseReceiptItems(text: string): ReceiptItemDraft[] {
 
   for (const line of lines) {
     if (skip.test(line)) continue
+    // Notas dos EUA: $12.99 / 12.99 — também aceita R$ / vírgula BR
     const endPrice = line.match(
-      /^(.+?)\s+(?:R\$\s*)?(\d{1,4}(?:[.,]\d{2}))\s*[A-Z]?\s*$/i,
+      /^(.+?)\s+(?:(?:US\$|R\$|\$)\s*)?(\d{1,4}(?:[.,]\d{2}))\s*[A-Z]?\s*$/i,
     )
-    const startPrice = line.match(/^(?:R\$\s*)?(\d{1,4}(?:[.,]\d{2}))\s+(.+)$/i)
+    const startPrice = line.match(
+      /^(?:(?:US\$|R\$|\$)\s*)?(\d{1,4}(?:[.,]\d{2}))\s+(.+)$/i,
+    )
 
     let description = ''
     let amount = 0

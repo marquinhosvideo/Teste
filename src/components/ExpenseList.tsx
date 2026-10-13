@@ -1,7 +1,8 @@
 import { Trash2 } from 'lucide-react'
 import type { Day, Expense } from '../types'
 import { BUDGET_LABELS } from '../types'
-import { formatMoney, formatShortDate } from '../lib/format'
+import { formatShortDate } from '../lib/format'
+import { MoneyPair } from './MoneyPair'
 
 type Props = {
   expenses: Expense[]
@@ -10,7 +11,7 @@ type Props = {
   onRemove: (id: string) => void
 }
 
-export function ExpenseList({ expenses, days, currency, onRemove }: Props) {
+export function ExpenseList({ expenses, days, onRemove }: Props) {
   if (!expenses.length) {
     return <p className="empty-hint">Nenhum gasto neste filtro.</p>
   }
@@ -33,7 +34,7 @@ export function ExpenseList({ expenses, days, currency, onRemove }: Props) {
               </p>
             </div>
             <p className="expense-item__amount">
-              {formatMoney(expense.amount, currency)}
+              <MoneyPair amountBrl={expense.amount} layout="stack" />
             </p>
             <button
               type="button"

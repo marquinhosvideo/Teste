@@ -2,7 +2,8 @@ import { useState, type FormEvent } from 'react'
 import type { BudgetId, Day } from '../types'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
 import { stripEmoji } from '../lib/display'
-import { formatShortDate } from '../lib/format'
+import { usdToBrl, USD_BRL_RATE } from '../lib/currency'
+import { formatMoney, formatShortDate, parseAmount } from '../lib/format'
 
 type Props = {
   days: Day[]
@@ -25,13 +26,16 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    const value = Number(amount.replace(',', '.'))
-    if (!description.trim() || !Number.isFinite(value) || value <= 0) return
-    onSubmit({ dayId, budgetId, description, amount: value })
+    const usd = parseAmount(amount)
+    if (!description.trim() || usd <= 0) return
+    onSubmit({ dayId, budgetId, description, amount: usdToBrl(usd) })
     setDescription('')
     setAmount('')
     setOpen(false)
   }
+
+  const usdPreview = parseAmount(amount)
+  const brlPreview = usdPreview > 0 ? usdToBrl(usdPreview) : 0
 
   if (!open) {
     return (
@@ -84,15 +88,19 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
       </div>
 
       <div className="field">
-        <label htmlFor="exp-amount">Valor (R$)</label>
+        <label htmlFor="exp-amount">Valor (US$)</label>
         <input
           id="exp-amount"
           inputMode="decimal"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          placeholder="0,00"
+          placeholder="0.00"
           required
         />
+        <p className="field__hint">
+          Convertido a R$ {USD_BRL_RATE.toFixed(2).replace('.', ',')}/US$
+          {brlPreview > 0 ? ` → ${formatMoney(brlPreview, 'BRL')}` : ''}
+        </p>
       </div>
 
       <div className="expense-form__actions">
