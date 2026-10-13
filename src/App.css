@@ -766,7 +766,9 @@
 
 .cat-bar__labels {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  gap: 4px 8px;
   font-size: 14px;
 }
 
@@ -776,6 +778,7 @@
 
 .cat-bar__labels span:last-child {
   color: var(--color-ink-muted-48);
+  text-align: right;
 }
 
 .cat-bar__track {
@@ -851,6 +854,51 @@
   margin: 0;
   font-size: 17px;
   font-weight: 600;
+  text-align: right;
+}
+
+.money-pair {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+}
+
+.money-pair--stack {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.money-pair--hero {
+  align-items: flex-start;
+}
+
+.money-pair__brl {
+  font-weight: 600;
+}
+
+.money-pair__usd {
+  font-size: 0.72em;
+  font-weight: 500;
+  opacity: 0.72;
+  letter-spacing: -0.2px;
+}
+
+.money-pair--hero .money-pair__usd {
+  font-size: 0.42em;
+  margin-top: 6px;
+  opacity: 0.78;
+}
+
+.field__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-ink-muted-48);
+  line-height: 1.35;
+}
+
+.utility-card__price .money-pair--stack {
+  align-items: flex-start;
 }
 
 /* Fields + buttons */

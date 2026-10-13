@@ -6,9 +6,10 @@ import { BudgetWidgets } from '../components/BudgetWidgets'
 import { DayHero } from '../components/DayHero'
 import { DayInfo } from '../components/DayInfo'
 import { parseDayMeta } from '../lib/dayMeta'
-import { formatMoney } from '../lib/format'
+import { formatMoneyPair } from '../lib/format'
 import { spentByBudget } from '../lib/budgets'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
+import { MoneyPair } from '../components/MoneyPair'
 
 type Props = {
   trip: Trip
@@ -35,11 +36,13 @@ export function TodayView({ trip, day, onToggle }: Props) {
       <section className="band">
         <div className="band__inner">
           <p className="eyebrow">Gasto do dia</p>
-          <p className="display-lg">{formatMoney(dayTotal, trip.currency)}</p>
+          <p className="display-lg">
+            <MoneyPair amountBrl={dayTotal} layout="stack" className="money-pair--hero" />
+          </p>
           <div className="spend-pills">
             {BUDGET_ORDER.filter((id) => byBudget[id] > 0).map((id) => (
               <span key={id} className="hairline-pill">
-                {BUDGET_LABELS[id]} {formatMoney(byBudget[id], trip.currency)}
+                {BUDGET_LABELS[id]} {formatMoneyPair(byBudget[id])}
               </span>
             ))}
             {!dayExpenses.length ? (

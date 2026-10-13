@@ -29,6 +29,10 @@ Passo a passo: **[SYNC.md](./SYNC.md)** (também compara Excel/OneDrive vs Supab
 
 Teto provisório **R$ 5.000** cada — depois ajustamos os valores reais.
 
+### Moeda
+
+Notas e lançamentos entram em **US$** e são convertidos para **R$** com taxa fixa **R$ 5,15**. Em toda a interface o valor aparece em reais e, ao lado, o equivalente em dólar.
+
 ## Scripts
 
 - `npm run dev` — desenvolvimento

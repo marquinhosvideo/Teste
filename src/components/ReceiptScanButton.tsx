@@ -2,8 +2,10 @@ import { useRef, useState } from 'react'
 import { Camera, LoaderCircle, Trash2 } from 'lucide-react'
 import type { BudgetId, Day } from '../types'
 import { BUDGET_LABELS, BUDGET_ORDER } from '../types'
+import { usdToBrl, USD_BRL_RATE } from '../lib/currency'
 import { formatMoney, formatShortDate } from '../lib/format'
 import { scanReceiptImage, type ReceiptItemDraft } from '../lib/receiptOcr'
+import { MoneyPair } from './MoneyPair'
 
 type DraftRow = ReceiptItemDraft & { budgetId: BudgetId; keep: boolean }
 
@@ -24,7 +26,6 @@ type Props = {
 export function ReceiptScanButton({
   days,
   defaultDayId,
-  currency,
   onConfirm,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -91,7 +92,8 @@ export function ReceiptScanButton({
           dayId,
           budgetId: r.budgetId,
           description: r.description.trim(),
-          amount: r.amount,
+          // OCR / edição da nota são em USD → grava em BRL
+          amount: usdToBrl(r.amount),
         })),
       )
       reset()
@@ -160,7 +162,9 @@ export function ReceiptScanButton({
           </div>
 
           <p className="muted">
-            Confira os itens e diga a classificação de cada um antes de lançar.
+            Valores da nota em US$ · conversão R${' '}
+            {USD_BRL_RATE.toFixed(2).replace('.', ',')}/US$. Confira os itens e a
+            classificação antes de lançar.
           </p>
 
           <ul className="receipt-scan__rows">
@@ -207,7 +211,7 @@ export function ReceiptScanButton({
 
                 <div className="receipt-row__grid">
                   <div className="field">
-                    <label>Valor</label>
+                    <label>Valor (US$)</label>
                     <input
                       inputMode="decimal"
                       value={String(row.amount).replace('.', ',')}
@@ -245,7 +249,13 @@ export function ReceiptScanButton({
                     </select>
                   </div>
                 </div>
-                <p className="receipt-row__amount">{formatMoney(row.amount, currency)}</p>
+                <p className="receipt-row__amount">
+                  {row.amount > 0 ? (
+                    <MoneyPair amountBrl={usdToBrl(row.amount)} />
+                  ) : (
+                    formatMoney(0, 'USD')
+                  )}
+                </p>
               </li>
             ))}
           </ul>

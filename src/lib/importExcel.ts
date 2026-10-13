@@ -1,5 +1,6 @@
 import type { WorkSheet } from 'xlsx'
 import type { Activity, BudgetId, Day, Expense, Tip, Trip } from '../types'
+import { usdToBrl } from './currency'
 import { parseAmount, uid } from './format'
 import { normalizeBudgetId } from './budgets'
 
@@ -236,10 +237,11 @@ function buildExpensesFromRows(
       const description = clean(
         pick(row, ['descricao', 'descrição', 'description', 'item', 'gasto']),
       )
-      const amount = parseAmount(
+      // Planilha de gastos: valores em USD → grava em BRL
+      const amountUsd = parseAmount(
         pick(row, ['valor', 'amount', 'preco', 'preço', 'custo']),
       )
-      if (!date || !description || amount <= 0) return null
+      if (!date || !description || amountUsd <= 0) return null
 
       let dayId = dayByDate.get(date)
       if (!dayId) {
@@ -269,7 +271,7 @@ function buildExpensesFromRows(
           ]),
         ),
         description,
-        amount,
+        amount: usdToBrl(amountUsd),
         createdAt: new Date().toISOString(),
       } satisfies Expense
     })

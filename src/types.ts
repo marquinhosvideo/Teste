@@ -52,6 +52,10 @@ export type Expense = {
   /** Em qual orçamento o gasto conta */
   budgetId: BudgetId
   description: string
+  /**
+   * Valor canônico em BRL (convertido do USD digitado / lido da nota
+   * com a taxa fixa em `src/lib/currency.ts`).
+   */
   amount: number
   createdAt: string
 }

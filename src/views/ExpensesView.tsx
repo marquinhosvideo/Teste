@@ -5,8 +5,10 @@ import { DayChips } from '../components/DayChips'
 import { ExpenseForm } from '../components/ExpenseForm'
 import { ExpenseList } from '../components/ExpenseList'
 import { ReceiptScanButton } from '../components/ReceiptScanButton'
-import { formatMoney } from '../lib/format'
+import { formatMoneyPair } from '../lib/format'
 import { spentByBudget } from '../lib/budgets'
+import { MoneyPair } from '../components/MoneyPair'
+import { USD_BRL_RATE } from '../lib/currency'
 
 type Props = {
   trip: Trip
@@ -44,11 +46,14 @@ export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
       <section className="band band--dark band--hero">
         <div className="band__inner">
           <p className="eyebrow eyebrow--on-dark">Gastos</p>
-          <p className="display-hero">{formatMoney(tripTotal, trip.currency)}</p>
+          <p className="display-hero">
+            <MoneyPair amountBrl={tripTotal} layout="stack" className="money-pair--hero" />
+          </p>
           <p className="lede lede--on-dark">
-            Total da viagem.
+            Total da viagem · US$ 1 = R${' '}
+            {USD_BRL_RATE.toFixed(2).replace('.', ',')}.
             {filterDayId !== 'all'
-              ? ` Filtro: ${formatMoney(filterTotal, trip.currency)}.`
+              ? ` Filtro: ${formatMoneyPair(filterTotal)}.`
               : ''}
           </p>
         </div>
@@ -62,11 +67,10 @@ export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
           includeAll
           allMeta={`${trip.expenses.length} gastos`}
           metaForDay={(day) =>
-            formatMoney(
+            formatMoneyPair(
               trip.expenses
                 .filter((e) => e.dayId === day.id)
                 .reduce((s, e) => s + e.amount, 0),
-              trip.currency,
             )
           }
         />
@@ -80,7 +84,7 @@ export function ExpensesView({ trip, defaultDayId, onAdd, onRemove }: Props) {
                 <div key={id} className="cat-bar">
                   <div className="cat-bar__labels">
                     <span>{BUDGET_LABELS[id]}</span>
-                    <span>{formatMoney(amount, trip.currency)}</span>
+                    <span>{formatMoneyPair(amount)}</span>
                   </div>
                   <div className="cat-bar__track">
                     <div
