@@ -28,7 +28,7 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --content-max: 640px;
   --hero-photo-ratio: 4 / 5;
-  --hero-photo-max-h: min(52vh, 440px);
+  --hero-photo-max-h: min(26vh, 220px);
 }
 
 /* Mobile landscape: wider, shorter hero photo */
@@ -36,7 +36,7 @@ html[data-device='mobile'][data-aspect='landscape'],
 .app-shell--mobile.app-shell--landscape {
   --content-max: 720px;
   --hero-photo-ratio: 21 / 9;
-  --hero-photo-max-h: min(38vh, 280px);
+  --hero-photo-max-h: min(19vh, 140px);
 }
 
 /* Desktop portrait (tall window): roomier column, still stacked hero */
@@ -44,7 +44,7 @@ html[data-device='desktop'][data-aspect='portrait'],
 .app-shell--desktop.app-shell--portrait {
   --content-max: 720px;
   --hero-photo-ratio: 16 / 10;
-  --hero-photo-max-h: min(42vh, 480px);
+  --hero-photo-max-h: min(21vh, 240px);
 }
 
 /* Desktop landscape: wide reading column + cinematic photo */
@@ -52,7 +52,7 @@ html[data-device='desktop'][data-aspect='landscape'],
 .app-shell--desktop.app-shell--landscape {
   --content-max: 980px;
   --hero-photo-ratio: 2.2 / 1;
-  --hero-photo-max-h: min(48vh, 560px);
+  --hero-photo-max-h: min(24vh, 280px);
 }
 
 .app-shell {
@@ -229,16 +229,16 @@ html[data-device='desktop'][data-aspect='landscape'] .day-hero,
 .app-shell--desktop.app-shell--landscape .day-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
-  align-items: stretch;
-  min-height: min(52vh, 560px);
+  align-items: center;
+  min-height: min(26vh, 280px);
 }
 
 html[data-device='desktop'][data-aspect='landscape'] .day-hero__photo,
 .app-shell--desktop.app-shell--landscape .day-hero__photo {
   aspect-ratio: auto;
-  max-height: none;
-  height: 100%;
-  min-height: 420px;
+  max-height: min(24vh, 280px);
+  height: min(24vh, 280px);
+  min-height: 210px;
 }
 
 html[data-device='desktop'][data-aspect='landscape'] .day-hero__body,
@@ -597,6 +597,23 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
   letter-spacing: -0.2px;
 }
 
+.activity__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.activity__actions .icon-btn {
+  width: 36px;
+  height: 36px;
+}
+
+.icon-btn--danger,
+.btn--danger {
+  color: var(--color-danger);
+}
+
 .activity__time {
   font-weight: 400;
 }
@@ -694,6 +711,63 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
   margin: 0;
   font-size: 15px;
   line-height: 1.45;
+}
+
+/* Itinerary editing */
+.itinerary-add-day {
+  margin-top: 20px;
+}
+
+.itinerary-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.itinerary-section-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.itinerary-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 20px;
+  background: var(--color-canvas-parchment);
+  animation: fade-up 280ms ease-out both;
+}
+
+.itinerary-editor h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 21px;
+}
+
+.itinerary-editor__grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(220px, 1.3fr);
+  gap: 12px;
+}
+
+.itinerary-editor__grid--activity {
+  grid-template-columns: minmax(140px, 1fr) minmax(120px, 0.7fr);
+}
+
+.itinerary-editor__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.itinerary-add-activity {
+  margin-top: 20px;
 }
 
 /* Day info + addresses */
@@ -1161,10 +1235,11 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
 }
 
 .field input,
-.field select {
-  height: 44px;
+.field select,
+.field textarea {
+  min-height: 44px;
   padding: 0 16px;
-  border-radius: 999px;
+  border-radius: 22px;
   border: 1px solid var(--color-hairline);
   background: var(--color-canvas);
   font-family: var(--font-text);
@@ -1172,8 +1247,20 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
   color: var(--color-ink);
 }
 
+.field input,
+.field select {
+  height: 44px;
+}
+
+.field textarea {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  resize: vertical;
+}
+
 .field input:focus,
-.field select:focus {
+.field select:focus,
+.field textarea:focus {
   outline: 2px solid var(--color-primary-focus);
   outline-offset: 2px;
 }
@@ -1569,6 +1656,20 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
   .location-card__actions {
     grid-column: 2;
   }
+
+  .itinerary-editor__grid,
+  .itinerary-editor__grid--activity {
+    grid-template-columns: 1fr;
+  }
+
+  .itinerary-section-head__actions {
+    width: 100%;
+  }
+
+  .itinerary-section-head__actions .btn {
+    flex: 1 1 auto;
+    padding-inline: 14px;
+  }
 }
 
 /* Fallback when JS has not stamped data-device yet */
@@ -1576,21 +1677,21 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
   :root:not([data-device]) {
     --content-max: 980px;
     --hero-photo-ratio: 2.2 / 1;
-    --hero-photo-max-h: min(48vh, 560px);
+    --hero-photo-max-h: min(24vh, 280px);
   }
 
   :root:not([data-device]) .day-hero {
     display: grid;
     grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
-    align-items: stretch;
-    min-height: min(52vh, 560px);
+    align-items: center;
+    min-height: min(26vh, 280px);
   }
 
   :root:not([data-device]) .day-hero__photo {
     aspect-ratio: auto;
-    max-height: none;
-    height: 100%;
-    min-height: 420px;
+    max-height: min(24vh, 280px);
+    height: min(24vh, 280px);
+    min-height: 210px;
   }
 
   :root:not([data-device]) .day-hero__body {
@@ -1605,13 +1706,13 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
 @media (max-width: 899px) and (orientation: landscape) {
   :root:not([data-device]) {
     --hero-photo-ratio: 21 / 9;
-    --hero-photo-max-h: min(38vh, 280px);
+    --hero-photo-max-h: min(19vh, 140px);
   }
 }
 
 @media (max-width: 899px) and (orientation: portrait) {
   :root:not([data-device]) {
     --hero-photo-ratio: 4 / 5;
-    --hero-photo-max-h: min(52vh, 440px);
+    --hero-photo-max-h: min(26vh, 220px);
   }
 }

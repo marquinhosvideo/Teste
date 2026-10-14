@@ -111,6 +111,7 @@ export default function App() {
             trip={trip}
             initialDayId={activeDay?.id}
             onToggle={toggleActivity}
+            onChange={restoreTripSnapshot}
           />
         ) : null}
         {tab === 'gastos' && activeDay ? (
