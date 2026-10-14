@@ -599,5 +599,377 @@
       "tema": "Premissas desta versão",
       "texto": "\"Interpark\" foi interpretado como ICON Park. Disney Springs aparece em 29/11 e 10/12 (propositalmente: uma vez p/ ingressos+compras, outra p/ Natal). Best Buy aparece no Florida Mall (05/12) e no Millenia (08/12): vá só a um, o que tiver o produto. Tempos de carro novos são estimativas. A loja coreana é a Beauty Master (W Colonial); a moida K-Beauty saiu. Nordstrom Rack: só a de Eastgate (08/12); a de Winter Park é longe demais."
     }
+  ],
+  "locations": [
+    {
+      "name": "Aeroporto do Galeão (GIG)",
+      "address": "Buscar pelo nome",
+      "category": "Aeroportos"
+    },
+    {
+      "name": "GIG",
+      "address": "Buscar pelo nome",
+      "category": "Aeroportos"
+    },
+    {
+      "name": "Miami International Airport (MIA)",
+      "address": "Buscar pelo nome",
+      "category": "Aeroportos"
+    },
+    {
+      "name": "Cape May Cafe",
+      "address": "Minnie's Beach Bash (Beach Club) – Disney's Beach Club Resort, 1800 Epcot Resorts Blvd, Lake Buena Vista, FL 32830",
+      "category": "Alimentação"
+    },
+    {
+      "name": "Chef Mickey's (Contemporary)",
+      "address": "Disney's Contemporary Resort, 4600 N World Dr, Lake Buena Vista, FL 32830",
+      "category": "Alimentação"
+    },
+    {
+      "name": "Disney's Contemporary Resort",
+      "address": "4600 N World Dr, Lake Buena Vista, FL 32830",
+      "category": "Alimentação"
+    },
+    {
+      "name": "buybuy BABY",
+      "address": "(antiga loja: 3206 E Colonial Dr)",
+      "category": "Bebê"
+    },
+    {
+      "name": "Beauty Master",
+      "address": "W Colonial (4,6, 743 aval.) – 7175 W Colonial Dr, Orlando, FL 32818",
+      "category": "Beleza"
+    },
+    {
+      "name": "Beauty Master",
+      "address": "Florida Mall (4,3, 250 aval.) – 1631 Florida Mall Ave, Orlando, FL 32809",
+      "category": "Beleza (alternativa)"
+    },
+    {
+      "name": "Celebration Town Center",
+      "address": "Market St, Celebration, FL 34747",
+      "category": "Centrinho"
+    },
+    {
+      "name": "Beauty Master",
+      "address": "7175 W Colonial Dr, Orlando, FL 32818",
+      "category": "Compras"
+    },
+    {
+      "name": "Best Buy",
+      "address": "8350 S Orange Blossom Trl",
+      "category": "Compras"
+    },
+    {
+      "name": "Best Buy",
+      "address": "4155 Millenia Blvd",
+      "category": "Compras"
+    },
+    {
+      "name": "Burlington",
+      "address": "8204 S Orange Blossom Trl",
+      "category": "Compras"
+    },
+    {
+      "name": "Burlington",
+      "address": "6870 Grand National Dr",
+      "category": "Compras"
+    },
+    {
+      "name": "Disney Ticket Center",
+      "address": "Town Center de Disney Springs",
+      "category": "Compras"
+    },
+    {
+      "name": "Five Below",
+      "address": "5295 International Dr, Ste 660",
+      "category": "Compras"
+    },
+    {
+      "name": "Lake Buena Vista Factory Stores",
+      "address": "15657 State Rd 535, Orlando, FL 32821",
+      "category": "Compras"
+    },
+    {
+      "name": "Marshalls",
+      "address": "4648 Millenia Plaza Way",
+      "category": "Compras"
+    },
+    {
+      "name": "Nordstrom Rack",
+      "address": "4036 Eastgate Dr, Orlando, FL 32839 (todos em Orlando, FL 32839)",
+      "category": "Compras"
+    },
+    {
+      "name": "Orlando International Premium Outlets",
+      "address": "4951 International Dr, Orlando, FL 32819",
+      "category": "Compras"
+    },
+    {
+      "name": "Orlando Outlet Marketplace",
+      "address": "5269 International Dr",
+      "category": "Compras"
+    },
+    {
+      "name": "Orlando Vineland Premium Outlets",
+      "address": "8200 Vineland Ave, Orlando, FL 32821",
+      "category": "Compras"
+    },
+    {
+      "name": "Play Park do Florida Mall",
+      "address": "The Florida Mall, 8001 S Orange Blossom Trl, Orlando, FL 32809",
+      "category": "Compras"
+    },
+    {
+      "name": "Ross",
+      "address": "5295 International Dr",
+      "category": "Compras"
+    },
+    {
+      "name": "Ross",
+      "address": "7603 Turkey Lake Rd, Orlando, FL 32819",
+      "category": "Compras"
+    },
+    {
+      "name": "Ross",
+      "address": "4661 Millenia Plaza Way",
+      "category": "Compras"
+    },
+    {
+      "name": "T.J. Maxx",
+      "address": "6716 Grand National Dr",
+      "category": "Compras"
+    },
+    {
+      "name": "Target",
+      "address": "4750 Millenia Plaza Way",
+      "category": "Compras"
+    },
+    {
+      "name": "The Mall at Millenia",
+      "address": "4200 Conroy Rd",
+      "category": "Compras"
+    },
+    {
+      "name": "Ulta",
+      "address": "5295 International Blvd, Ste 100-A (todos em Orlando, FL 32819)",
+      "category": "Compras"
+    },
+    {
+      "name": "Ulta",
+      "address": "4600 Millenia Plaza Way Ste 11",
+      "category": "Compras"
+    },
+    {
+      "name": "Walmart",
+      "address": "8990 Turkey Lake Rd, Orlando, FL 32819",
+      "category": "Compras"
+    },
+    {
+      "name": "Walmart",
+      "address": "3250 Vineland Rd, Kissimmee, FL 34746",
+      "category": "Compras"
+    },
+    {
+      "name": "Walmart",
+      "address": "8990 Turkey Lake Rd (Orlando, FL 32819)",
+      "category": "Compras"
+    },
+    {
+      "name": "Walmart Supercenter",
+      "address": "8990 Turkey Lake Rd, Orlando, FL 32819 (alternativa: Target Millenia – 4750 Millenia Plaza Way, Orlando, FL 32839)",
+      "category": "Compras"
+    },
+    {
+      "name": "Hotéis Disney com gingerbread (resort hopping)",
+      "address": "Contemporary: 4600 N World Dr",
+      "category": "Hospedagem"
+    },
+    {
+      "name": "Crayola Store (Florida Mall)",
+      "address": "8001 S Orange Blossom Trl, Orlando, FL 32809",
+      "category": "Loja de atração"
+    },
+    {
+      "name": "World of Disney (Disney Springs)",
+      "address": "Disney Springs, Lake Buena Vista, FL 32830",
+      "category": "Loja Disney"
+    },
+    {
+      "name": "Nordstrom Rack",
+      "address": "Eastgate / Millenia (4,2, 1.697 aval.) – 4036 Eastgate Dr, Orlando, FL 32839",
+      "category": "Off-price"
+    },
+    {
+      "name": "Sawgrass Mills",
+      "address": "12801 W Sunrise Blvd, Sunrise, FL 33323",
+      "category": "Outlet (Miami)"
+    },
+    {
+      "name": "Dolphin Mall",
+      "address": "11401 NW 12th St, Miami, FL 33172",
+      "category": "Outlet/shopping (Miami)"
+    },
+    {
+      "name": "Beach Club: 1800 Epcot Resorts Blvd (Lake Buena Vista, FL 32830)",
+      "address": "Buscar pelo nome",
+      "category": "Outros"
+    },
+    {
+      "name": "Cocoa Beach (Pier)",
+      "address": "401 Meade Ave, Cocoa Beach, FL 32931",
+      "category": "Outros"
+    },
+    {
+      "name": "Gaylord Palms",
+      "address": "ice! featuring The Polar Express – 6000 W Osceola Pkwy, Kissimmee, FL 34746",
+      "category": "Outros"
+    },
+    {
+      "name": "Kennedy Space Center Visitor Complex",
+      "address": "Space Commerce Way, Merritt Island, FL 32953",
+      "category": "Outros"
+    },
+    {
+      "name": "Now Snowing",
+      "address": "Celebration Town Center – Market St, Celebration Town Center, Celebration, FL 34747",
+      "category": "Outros"
+    },
+    {
+      "name": "Orlando Science Center",
+      "address": "KidsTown – 777 E Princeton St, Orlando, FL 32803",
+      "category": "Outros"
+    },
+    {
+      "name": "SEA LIFE Orlando Aquarium",
+      "address": "8449 International Dr, Orlando, FL 32819 (garagem do ICON Park grátis, andares 4–7)",
+      "category": "Outros"
+    },
+    {
+      "name": "Splash pads / parques aquáticos",
+      "address": "—",
+      "category": "Outros"
+    },
+    {
+      "name": "Crayola Experience Orlando",
+      "address": "The Florida Mall, 8001 S Orange Blossom Trl, Orlando, FL 32809",
+      "category": "Parques"
+    },
+    {
+      "name": "Disney's Animal Kingdom",
+      "address": "Buscar pelo nome",
+      "category": "Parques"
+    },
+    {
+      "name": "Disney's Hollywood Studios",
+      "address": "Buscar pelo nome",
+      "category": "Parques"
+    },
+    {
+      "name": "Epic Universe",
+      "address": "Orlando, FL",
+      "category": "Parques"
+    },
+    {
+      "name": "Gatorland",
+      "address": "14501 S Orange Blossom Trl, Orlando, FL 32837",
+      "category": "Parques"
+    },
+    {
+      "name": "Magic Kingdom",
+      "address": "estacionamento no Transportation & Ticket Center",
+      "category": "Parques"
+    },
+    {
+      "name": "Magic Kingdom",
+      "address": "Buscar pelo nome",
+      "category": "Parques"
+    },
+    {
+      "name": "Peppa Pig Theme Park Florida",
+      "address": "Winter Haven, FL (ao lado do LEGOLAND Florida)",
+      "category": "Parques"
+    },
+    {
+      "name": "The Florida Mall (Play Park, Crayola)",
+      "address": "8001 S Orange Blossom Trl, Orlando, FL 32809",
+      "category": "Parques"
+    },
+    {
+      "name": "Winter Garden",
+      "address": "Farmers Market (4,8), Plant St. Market (4,8) e splash pad – 104 S Lakeview Ave e 426 W Plant St, Winter Garden, FL 34787",
+      "category": "Passeio/centrinho"
+    },
+    {
+      "name": "Disney Springs",
+      "address": "Lake Buena Vista, FL 32830 (estacionamento grátis)",
+      "category": "Passeios"
+    },
+    {
+      "name": "Disney Springs + Christmas Tree Stroll",
+      "address": "Lake Buena Vista, FL 32830",
+      "category": "Passeios"
+    },
+    {
+      "name": "Harry P. Leu Gardens",
+      "address": "1920 N Forest Ave, Orlando, FL 32803",
+      "category": "Passeios"
+    },
+    {
+      "name": "ICON Park",
+      "address": "8375 International Dr, Orlando, FL 32819",
+      "category": "Passeios"
+    },
+    {
+      "name": "ICON Park / The Wheel",
+      "address": "8375 International Dr, Orlando, FL 32819",
+      "category": "Passeios"
+    },
+    {
+      "name": "Lake Eola Park",
+      "address": "barcos-cisne – E Central Blvd x N Eola Dr, Orlando, FL 32801",
+      "category": "Passeios"
+    },
+    {
+      "name": "Plant St. Market",
+      "address": "426 W Plant St, Winter Garden, FL 34787",
+      "category": "Passeios"
+    },
+    {
+      "name": "Winter Garden (Farmers Market + Plant Street + splash pad)",
+      "address": "104 S Lakeview Ave, Winter Garden, FL 34787",
+      "category": "Passeios"
+    },
+    {
+      "name": "Winter Garden Farmers Market",
+      "address": "104 S Lakeview Ave, Winter Garden, FL 34787",
+      "category": "Passeios"
+    },
+    {
+      "name": "Winter Park Scenic Boat Tour",
+      "address": "312 E Morse Blvd, Winter Park, FL 32789",
+      "category": "Passeios"
+    },
+    {
+      "name": "Old Town Kissimmee",
+      "address": "5770 W Irlo Bronson Memorial Hwy, Kissimmee, FL 34746",
+      "category": "Rua de lojas"
+    },
+    {
+      "name": "The Florida Mall",
+      "address": "8001 S Orange Blossom Trl, Orlando, FL 32809",
+      "category": "Shopping"
+    },
+    {
+      "name": "The Mall at Millenia",
+      "address": "4200 Conroy Rd, Orlando, FL 32839",
+      "category": "Shopping"
+    },
+    {
+      "name": "Five Below",
+      "address": "I-Drive – 5295 International Dr, Ste 660, Orlando, FL 32819",
+      "category": "Variedades"
+    }
   ]
 }

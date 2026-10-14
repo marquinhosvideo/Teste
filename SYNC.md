@@ -81,6 +81,23 @@ delete from public.allowed_emails where email = 'antigo@email.com';
 
 E atualize também o `VITE_ALLOWED_EMAILS` no `.env` / Vercel.
 
+### 4c. Aplicar o hardening de segurança
+
+Depois de criar as tabelas e preencher `public.allowed_emails`, rode
+[`supabase/security_hardening.sql`](./supabase/security_hardening.sql) no SQL
+Editor. Ele:
+
+- aplica a mesma allowlist às quatro tabelas (`activity_checks`, `expenses`,
+  `trip_document` e `trip_versions`);
+- impede que novos cadastros fora da lista sejam criados;
+- limita payloads de roteiro a 5 MB e valida limites dos gastos.
+
+Antes de executar, confira no **Table Editor → allowed_emails** que só há
+familiares autorizados. Ao incluir ou remover alguém, mantenha sincronizados:
+
+1. `public.allowed_emails` no Supabase;
+2. `VITE_ALLOWED_EMAILS` no Vercel.
+
 ### 5. Copiar a URL e a chave da API (detalhado)
 
 O menu do Supabase mudou. **Não existe mais** só “Settings → API” em todos os projetos. Use um destes caminhos:

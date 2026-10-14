@@ -27,8 +27,9 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     const usd = parseAmount(amount)
-    if (!description.trim() || usd <= 0) return
-    onSubmit({ dayId, budgetId, description, amount: usdToBrl(usd) })
+    const cleanDescription = description.trim()
+    if (!cleanDescription || usd <= 0 || usdToBrl(usd) > 1_000_000) return
+    onSubmit({ dayId, budgetId, description: cleanDescription, amount: usdToBrl(usd) })
     setDescription('')
     setAmount('')
     setOpen(false)
@@ -83,6 +84,7 @@ export function ExpenseForm({ days, defaultDayId, onSubmit }: Props) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Almoço, ingressos, Uber"
+          maxLength={500}
           required
         />
       </div>

@@ -13,10 +13,3 @@ export function isEmailAllowed(email: string): boolean {
   if (!allowed.length) return true
   return allowed.includes(email.trim().toLowerCase())
 }
-
-export function allowedEmailsHint(): string {
-  const allowed = getAllowedEmails()
-  if (!allowed.length) return ''
-  if (allowed.length === 1) return allowed[0]
-  return allowed.join(' · ')
-}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CalendarDays, Home, Lightbulb, Receipt, Upload } from 'lucide-react'
+import { CalendarDays, Home, MapPinned, Receipt, Upload } from 'lucide-react'
 import type { TabId } from './types'
 import { useAuth } from './hooks/useAuth'
 import { useTrip } from './hooks/useTrip'
@@ -12,7 +12,7 @@ import { UpdatePasswordScreen } from './components/UpdatePasswordScreen'
 import { TodayView } from './views/TodayView'
 import { ItineraryView } from './views/ItineraryView'
 import { ExpensesView } from './views/ExpensesView'
-import { TipsView } from './views/TipsView'
+import { LocationsView } from './views/LocationsView'
 import { ImportView } from './views/ImportView'
 import './App.css'
 
@@ -20,7 +20,7 @@ const TABS: { id: TabId; label: string; icon: typeof Home }[] = [
   { id: 'hoje', label: 'Hoje', icon: Home },
   { id: 'roteiro', label: 'Roteiro', icon: CalendarDays },
   { id: 'gastos', label: 'Gastos', icon: Receipt },
-  { id: 'dicas', label: 'Dicas', icon: Lightbulb },
+  { id: 'locais', label: 'Locais', icon: MapPinned },
   { id: 'importar', label: 'Excel', icon: Upload },
 ]
 
@@ -121,7 +121,7 @@ export default function App() {
             onRemove={removeExpense}
           />
         ) : null}
-        {tab === 'dicas' ? <TipsView tips={trip.tips} /> : null}
+        {tab === 'locais' ? <LocationsView trip={trip} /> : null}
         {tab === 'importar' ? (
           <ImportView
             trip={trip}

@@ -65,6 +65,12 @@ export type Tip = {
   texto: string
 }
 
+export type SavedPlace = {
+  name: string
+  address: string
+  category: string
+}
+
 export type Trip = {
   name: string
   destination: string
@@ -74,11 +80,13 @@ export type Trip = {
   days: Day[]
   expenses: Expense[]
   tips?: Tip[]
+  /** Locais importados da planilha; dados antigos são derivados do roteiro. */
+  locations?: SavedPlace[]
   /** Overrides opcionais dos tetos (R$) — senão usa BUDGETS */
   budgetLimits?: Partial<Record<BudgetId, number>>
 }
 
-export type TabId = 'hoje' | 'roteiro' | 'gastos' | 'dicas' | 'importar'
+export type TabId = 'hoje' | 'roteiro' | 'gastos' | 'locais' | 'importar'
 
 /** Compat: labels antigos de categoria → orçamento */
 export const CATEGORY_LABELS = BUDGET_LABELS
