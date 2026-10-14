@@ -17,15 +17,32 @@ type ExpenseRow = {
   created_at: string
 }
 
+type TripDocumentRow = {
+  id: string
+  trip: Trip
+  updated_at: string
+}
+
+function isValidTrip(value: unknown): value is Trip {
+  if (!value || typeof value !== 'object') return false
+  const trip = value as Trip
+  return Array.isArray(trip.days) && trip.days.length > 0
+}
+
 export async function fetchRemoteState(): Promise<{
   checks: Record<string, boolean>
   expenses: Expense[]
+  tripDocument: Trip | null
+  tripDocumentUpdatedAt: string | null
 }> {
-  if (!supabase) return { checks: {}, expenses: [] }
+  if (!supabase) {
+    return { checks: {}, expenses: [], tripDocument: null, tripDocumentUpdatedAt: null }
+  }
 
-  const [checksRes, expensesRes] = await Promise.all([
+  const [checksRes, expensesRes, tripRes] = await Promise.all([
     supabase.from('activity_checks').select('activity_id, done'),
     supabase.from('expenses').select('*').order('created_at', { ascending: false }),
+    supabase.from('trip_document').select('trip, updated_at').eq('id', 'current').maybeSingle(),
   ])
 
   if (checksRes.error) throw checksRes.error
@@ -40,7 +57,23 @@ export async function fetchRemoteState(): Promise<{
     .map(rowToExpense)
     .filter((e): e is Expense => e != null)
 
-  return { checks, expenses }
+  // Projeto antigo sem trip_document: segue só com checks/gastos
+  if (tripRes.error) {
+    if (/trip_document|schema cache|does not exist/i.test(tripRes.error.message)) {
+      return { checks, expenses, tripDocument: null, tripDocumentUpdatedAt: null }
+    }
+    throw tripRes.error
+  }
+
+  const tripRow = tripRes.data as TripDocumentRow | null
+  const tripDocument = tripRow && isValidTrip(tripRow.trip) ? tripRow.trip : null
+
+  return {
+    checks,
+    expenses,
+    tripDocument,
+    tripDocumentUpdatedAt: tripRow?.updated_at ?? null,
+  }
 }
 
 export function applyRemoteToTrip(
@@ -58,6 +91,74 @@ export function applyRemoteToTrip(
       })),
     })),
     expenses,
+  }
+}
+
+export async function upsertTripDocument(trip: Trip): Promise<void> {
+  if (!supabase) return
+  const { error } = await supabase.from('trip_document').upsert({
+    id: 'current',
+    trip: structuredClone(trip),
+    updated_at: new Date().toISOString(),
+  })
+  if (error) {
+    if (/trip_document|schema cache/i.test(error.message)) {
+      throw new Error(
+        'Falta criar as tabelas de versão no Supabase. Rode supabase/trip_versions.sql no SQL Editor.',
+      )
+    }
+    throw error
+  }
+}
+
+/**
+ * Restaura checks, gastos e o documento do roteiro no banco a partir de um snapshot.
+ */
+export async function restoreRemoteFromTrip(trip: Trip): Promise<void> {
+  if (!supabase) return
+
+  await upsertTripDocument(trip)
+
+  const { data: existingExpenses, error: listError } = await supabase
+    .from('expenses')
+    .select('id')
+  if (listError) throw listError
+
+  const keep = new Set(trip.expenses.map((e) => e.id))
+  const toDelete = ((existingExpenses ?? []) as { id: string }[])
+    .map((row) => row.id)
+    .filter((id) => !keep.has(id))
+
+  if (toDelete.length) {
+    const { error } = await supabase.from('expenses').delete().in('id', toDelete)
+    if (error) throw error
+  }
+
+  if (trip.expenses.length) {
+    const { error } = await supabase.from('expenses').upsert(
+      trip.expenses.map((expense) => ({
+        id: expense.id,
+        day_id: expense.dayId,
+        budget_id: expense.budgetId,
+        description: expense.description,
+        amount: expense.amount,
+        created_at: expense.createdAt,
+      })),
+    )
+    if (error) throw error
+  }
+
+  const checks = trip.days.flatMap((day) =>
+    day.activities.map((act) => ({
+      activity_id: act.id,
+      done: Boolean(act.done),
+      updated_at: new Date().toISOString(),
+    })),
+  )
+
+  if (checks.length) {
+    const { error } = await supabase.from('activity_checks').upsert(checks)
+    if (error) throw error
   }
 }
 
@@ -108,6 +209,7 @@ export type RemoteChange =
   | { type: 'check'; activityId: string; done: boolean }
   | { type: 'expense_upsert'; expense: Expense }
   | { type: 'expense_delete'; expenseId: string }
+  | { type: 'trip_document'; trip: Trip }
 
 export function subscribeRemote(
   onChange: (change: RemoteChange) => void,
@@ -144,6 +246,17 @@ export function subscribeRemote(
         }
         const expense = rowToExpense(payload.new as ExpenseRow)
         if (expense) onChange({ type: 'expense_upsert', expense })
+      },
+    )
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'trip_document' },
+      (payload) => {
+        if (payload.eventType === 'DELETE') return
+        const row = payload.new as TripDocumentRow
+        if (row?.id === 'current' && isValidTrip(row.trip)) {
+          onChange({ type: 'trip_document', trip: row.trip })
+        }
       },
     )
     .subscribe()

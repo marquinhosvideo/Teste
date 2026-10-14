@@ -35,6 +35,7 @@ export default function App() {
     syncState,
     syncError,
     replaceTrip,
+    restoreTripSnapshot,
     resetToSample,
     toggleActivity,
     addExpense,
@@ -124,12 +125,12 @@ export default function App() {
         {tab === 'importar' ? (
           <ImportView
             trip={trip}
-            onImported={(next) => {
+            onImported={async (next) => {
               const checkMap = new Map<string, boolean>()
               for (const day of trip.days) {
                 for (const act of day.activities) checkMap.set(act.id, act.done)
               }
-              replaceTrip({
+              await replaceTrip({
                 ...next,
                 expenses: trip.expenses,
                 days: next.days.map((day) => ({
@@ -142,6 +143,7 @@ export default function App() {
               })
             }}
             onReset={resetToSample}
+            onRestore={restoreTripSnapshot}
           />
         ) : null}
       </main>

@@ -7,9 +7,11 @@ import {
   applyRemoteToTrip,
   deleteExpenseRemote,
   fetchRemoteState,
+  restoreRemoteFromTrip,
   subscribeRemote,
   upsertCheck,
   upsertExpense,
+  upsertTripDocument,
 } from '../lib/remoteSync'
 
 export type SyncState = 'local' | 'loading' | 'synced' | 'saving' | 'error'
@@ -41,7 +43,10 @@ export function useTrip(enabled = true) {
       try {
         const remote = await fetchRemoteState()
         if (cancelled) return
-        setTrip((prev) => applyRemoteToTrip(prev, remote.checks, remote.expenses))
+        setTrip((prev) => {
+          const base = remote.tripDocument ?? prev
+          return applyRemoteToTrip(base, remote.checks, remote.expenses)
+        })
         setSyncState('synced')
         setSyncError(null)
       } catch (err) {
@@ -53,6 +58,23 @@ export function useTrip(enabled = true) {
 
     const unsubscribe = subscribeRemote((change) => {
       setTrip((prev) => {
+        if (change.type === 'trip_document') {
+          return {
+            ...change.trip,
+            // Prefer live checks/expenses overlays when document arrives without them
+            expenses: change.trip.expenses?.length ? change.trip.expenses : prev.expenses,
+            days: change.trip.days.map((day) => {
+              const prevDay = prev.days.find((d) => d.id === day.id)
+              return {
+                ...day,
+                activities: day.activities.map((act) => {
+                  const prevAct = prevDay?.activities.find((a) => a.id === act.id)
+                  return prevAct ? { ...act, done: prevAct.done } : act
+                }),
+              }
+            }),
+          }
+        }
         if (change.type === 'check') {
           return {
             ...prev,
@@ -82,13 +104,55 @@ export function useTrip(enabled = true) {
     }
   }, [enabled])
 
-  const replaceTrip = useCallback((next: Trip) => {
-    setTrip(next)
-  }, [])
+  const replaceTrip = useCallback(
+    async (next: Trip) => {
+      setTrip(next)
+      if (!isSupabaseConfigured || !enabled) return
+      setSyncState('saving')
+      try {
+        await upsertTripDocument(next)
+        setSyncState('synced')
+        setSyncError(null)
+      } catch (err) {
+        setSyncState('error')
+        setSyncError(err instanceof Error ? err.message : 'Falha ao salvar roteiro')
+      }
+    },
+    [enabled],
+  )
 
-  const resetToSample = useCallback(() => {
-    setTrip(resetTrip())
-  }, [])
+  const restoreTripSnapshot = useCallback(
+    async (next: Trip) => {
+      setTrip(next)
+      if (!isSupabaseConfigured || !enabled) return
+      setSyncState('saving')
+      try {
+        await restoreRemoteFromTrip(next)
+        setSyncState('synced')
+        setSyncError(null)
+      } catch (err) {
+        setSyncState('error')
+        setSyncError(err instanceof Error ? err.message : 'Falha ao restaurar banco')
+        throw err
+      }
+    },
+    [enabled],
+  )
+
+  const resetToSample = useCallback(async () => {
+    const next = resetTrip()
+    setTrip(next)
+    if (!isSupabaseConfigured || !enabled) return
+    setSyncState('saving')
+    try {
+      await restoreRemoteFromTrip(next)
+      setSyncState('synced')
+      setSyncError(null)
+    } catch (err) {
+      setSyncState('error')
+      setSyncError(err instanceof Error ? err.message : 'Falha ao restaurar roteiro')
+    }
+  }, [enabled])
 
   const toggleActivity = useCallback(async (dayId: string, activityId: string) => {
     const current = tripRef.current.days
@@ -197,6 +261,7 @@ export function useTrip(enabled = true) {
     syncState,
     syncError,
     replaceTrip,
+    restoreTripSnapshot,
     resetToSample,
     toggleActivity,
     addExpense,

@@ -1,7 +1,7 @@
 # Passo a passo: Supabase + projeto GitHub
 
 Este guia liga o banco (checks e gastos) ao app do repositório
-`https://github.com/marquinhosvideo/Teste` (branch do Roteiro Orlando).
+`https://github.com/marquinhosvideo/Viagem` (branch do Roteiro Orlando).
 
 ---
 
@@ -28,6 +28,11 @@ Este guia liga o banco (checks e gastos) ao app do repositório
 5. Deve aparecer sucesso. Confira em **Table Editor**:
    - `activity_checks`
    - `expenses`
+   - `trip_document` (roteiro atual compartilhado)
+   - `trip_versions` (até 5 históricos para desfazer importação ruim)
+
+Se o projeto **já tinha** o schema antigo (só checks/gastos), rode também
+[`supabase/trip_versions.sql`](./supabase/trip_versions.sql) no SQL Editor.
 
 ### 3. Ativar Realtime (para atualizar ao vivo)
 
@@ -128,8 +133,8 @@ No `.env` do nosso app, a chave pública vai em `VITE_SUPABASE_ANON_KEY`
 1. Clone o repositório (ou abra no Cursor / VS Code):
 
 ```bash
-git clone https://github.com/marquinhosvideo/Teste.git
-cd Teste
+git clone https://github.com/marquinhosvideo/Viagem.git
+cd Viagem
 git checkout cursor/familia-viagem-tracker-7f72
 ```
 
@@ -153,7 +158,7 @@ Isso cria um arquivo chamado `.env` copiado do modelo `.env.example`.
 
 ##### No Cursor / VS Code (recomendado)
 
-1. Na barra lateral de **arquivos** (Explorer), na raiz do projeto `Teste`, procure `.env`.  
+1. Na barra lateral de **arquivos** (Explorer), na raiz do projeto `Viagem`, procure `.env`.  
    Se não aparecer: arquivos que começam com ponto às vezes ficam ocultos — use `Ctrl+P` (ou `Cmd+P` no Mac), digite `.env` e Enter.
 2. Abra o arquivo. Você verá algo assim:
 
@@ -236,9 +241,9 @@ git pull origin cursor/familia-viagem-tracker-7f72
 #### 2) Crie a conta e importe o projeto
 
 1. Abra [https://vercel.com](https://vercel.com)
-2. **Continue with GitHub** e autorize o acesso ao repo `marquinhosvideo/Teste`
+2. **Continue with GitHub** e autorize o acesso ao repo `marquinhosvideo/Viagem`
 3. Clique em **Add New… → Project**
-4. Selecione o repositório **Teste**
+4. Selecione o repositório **Viagem**
 5. Em **Configure Project**:
    - **Framework Preset:** Vite (geralmente detecta sozinho)
    - **Root Directory:** `.` (raiz)
@@ -305,8 +310,9 @@ No Vercel: **Project → Settings → Environment Variables** → edite →
 ## Parte 3 — Checklist rápido
 
 - [ ] Projeto Supabase criado  
-- [ ] `schema.sql` executado (tabelas `activity_checks` e `expenses`)  
-- [ ] Realtime ligado nas duas tabelas  
+- [ ] `schema.sql` executado (tabelas `activity_checks`, `expenses`, `trip_document`, `trip_versions`)  
+  — ou `trip_versions.sql` se o projeto já existia  
+- [ ] Realtime ligado em `activity_checks`, `expenses` e `trip_document`  
 - [ ] Confirm email desativado  
 - [ ] `.env` local **ou** variáveis no Vercel/Netlify  
 - [ ] Conta da família criada no app  
@@ -320,8 +326,12 @@ No Vercel: **Project → Settings → Environment Variables** → edite →
 | --- | --- |
 | `activity_checks` | Check de cada atividade (feito / não feito) |
 | `expenses` | Gastos (dia, orçamento, descrição, valor) |
+| `trip_document` | Roteiro atual (dias, dicas, etc.) compartilhado entre aparelhos |
+| `trip_versions` | Até 5 snapshots anteriores (antes de importar / restaurar) |
 
-O texto do roteiro (Manhã/Tarde/Noite) continua no app / Excel. Só o **estado ao vivo** vai para o Supabase.
+Na aba **Excel**, cada importação (ou restauração do roteiro amostra) grava o estado
+anterior em `trip_versions`. **Restaurar** uma versão reescreve o roteiro, checks e
+gastos no banco — qualquer aparelho logado vê o mesmo resultado.
 
 ---
 
