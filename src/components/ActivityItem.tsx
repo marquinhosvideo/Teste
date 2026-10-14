@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, MapPin } from 'lucide-react'
+import { Check, MapPin, Pencil, Trash2 } from 'lucide-react'
 import type { Activity } from '../types'
 import { copyText } from '../lib/addresses'
 import { parseActivityLines, periodFromActivityId } from '../lib/display'
@@ -7,9 +7,11 @@ import { parseActivityLines, periodFromActivityId } from '../lib/display'
 type Props = {
   activity: Activity
   onToggle: () => void
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
-export function ActivityItem({ activity, onToggle }: Props) {
+export function ActivityItem({ activity, onToggle, onEdit, onDelete }: Props) {
   const [expanded, setExpanded] = useState(false)
   const [copied, setCopied] = useState(false)
   const period = periodFromActivityId(activity.id)
@@ -48,6 +50,32 @@ export function ActivityItem({ activity, onToggle }: Props) {
             <PeriodIcon size={16} aria-hidden />
             <span>{period.label}</span>
             {activity.time ? <span className="activity__time">{activity.time}</span> : null}
+            {onEdit || onDelete ? (
+              <span className="activity__actions">
+                {onEdit ? (
+                  <button
+                    type="button"
+                    className="icon-btn"
+                    onClick={onEdit}
+                    aria-label={`Editar ${headline}`}
+                    title="Editar"
+                  >
+                    <Pencil size={16} aria-hidden />
+                  </button>
+                ) : null}
+                {onDelete ? (
+                  <button
+                    type="button"
+                    className="icon-btn icon-btn--danger"
+                    onClick={onDelete}
+                    aria-label={`Excluir ${headline}`}
+                    title="Excluir"
+                  >
+                    <Trash2 size={16} aria-hidden />
+                  </button>
+                ) : null}
+              </span>
+            ) : null}
           </div>
           <p className="activity__title">{headline}</p>
           {cats.length > 0 ? (
