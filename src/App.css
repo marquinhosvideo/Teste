@@ -201,53 +201,15 @@ html[data-device='desktop'][data-aspect='landscape'],
   animation: fade-up 480ms ease-out both;
 }
 
-.day-hero__photo {
-  position: relative;
-  width: 100%;
-  aspect-ratio: var(--hero-photo-ratio);
-  max-height: var(--hero-photo-max-h);
-  background: var(--color-surface-tile-3);
-  overflow: hidden;
-}
-
-.day-hero__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  animation: photo-in 700ms ease-out both;
-}
-
 .day-hero__body {
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 36px 20px 44px;
 }
 
-/* Desktop landscape: photo + copy side by side */
-html[data-device='desktop'][data-aspect='landscape'] .day-hero,
-.app-shell--desktop.app-shell--landscape .day-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
-  align-items: center;
-  min-height: min(26vh, 280px);
-}
-
-html[data-device='desktop'][data-aspect='landscape'] .day-hero__photo,
-.app-shell--desktop.app-shell--landscape .day-hero__photo {
-  aspect-ratio: auto;
-  max-height: min(24vh, 280px);
-  height: min(24vh, 280px);
-  min-height: 210px;
-}
-
 html[data-device='desktop'][data-aspect='landscape'] .day-hero__body,
 .app-shell--desktop.app-shell--landscape .day-hero__body {
-  max-width: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 48px 40px 52px;
+  padding: 40px 40px 44px;
 }
 
 html[data-device='desktop'] .band__inner,
@@ -1629,17 +1591,6 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
   }
 }
 
-@keyframes photo-in {
-  from {
-    opacity: 0;
-    transform: scale(1.04);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @media (max-width: 420px) {
   .receipt-row__grid {
     grid-template-columns: 1fr;
@@ -1680,26 +1631,8 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
     --hero-photo-max-h: min(24vh, 280px);
   }
 
-  :root:not([data-device]) .day-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
-    align-items: center;
-    min-height: min(26vh, 280px);
-  }
-
-  :root:not([data-device]) .day-hero__photo {
-    aspect-ratio: auto;
-    max-height: min(24vh, 280px);
-    height: min(24vh, 280px);
-    min-height: 210px;
-  }
-
   :root:not([data-device]) .day-hero__body {
-    max-width: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 48px 40px 52px;
+    padding: 40px 40px 44px;
   }
 }
 
