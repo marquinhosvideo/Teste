@@ -1,11 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import { Cloud, LogIn, ShieldCheck, Wifi } from 'lucide-react'
+import { LogIn, ShieldCheck } from 'lucide-react'
 import { allowedEmailsHint, getAllowedEmails } from '../lib/allowedEmails'
-import {
-  supabaseKeyPrefix,
-  supabaseUrl,
-  testSupabaseConnection,
-} from '../lib/supabase'
 
 type Props = {
   error: string | null
@@ -20,8 +15,6 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
-  const [diag, setDiag] = useState<string | null>(null)
-  const [diagOk, setDiagOk] = useState<boolean | null>(null)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -35,14 +28,6 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
     } finally {
       setBusy(false)
     }
-  }
-
-  async function handleTest() {
-    setDiag('Testando conexão…')
-    setDiagOk(null)
-    const result = await testSupabaseConnection()
-    setDiagOk(result.ok)
-    setDiag(result.detail)
   }
 
   return (
@@ -123,24 +108,6 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
         >
           {mode === 'login' ? 'Primeira vez? Criar conta' : 'Já tem conta? Entrar'}
         </button>
-
-        <button
-          type="button"
-          className="btn btn--ghost-pill btn--block"
-          onClick={() => void handleTest()}
-        >
-          <Wifi size={18} />
-          Testar conexão com Supabase
-        </button>
-
-        {diag ? (
-          <p className={`status ${diagOk ? 'status--ok' : 'status--err'}`}>{diag}</p>
-        ) : null}
-
-        <p className="auth-hint">
-          <Cloud size={14} /> Projeto: {supabaseUrl || '(sem URL)'} · chave:{' '}
-          {supabaseKeyPrefix || '(vazia)'}…
-        </p>
       </div>
     </div>
   )
