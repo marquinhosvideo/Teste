@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { LogIn, ShieldCheck } from 'lucide-react'
-import { allowedEmailsHint, getAllowedEmails } from '../lib/allowedEmails'
+import { LogIn } from 'lucide-react'
 
 type Props = {
   error: string | null
@@ -9,9 +8,8 @@ type Props = {
 }
 
 export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
-  const allowed = getAllowedEmails()
   const [mode, setMode] = useState<'login' | 'signup'>('login')
-  const [email, setEmail] = useState(allowed[0] ?? '')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
@@ -42,40 +40,18 @@ export function AuthScreen({ error, onSignIn, onSignUp }: Props) {
           Acesso restrito. Só e-mails autorizados podem sincronizar o roteiro.
         </p>
 
-        {allowed.length > 0 ? (
-          <p className="auth-allowlist">
-            <ShieldCheck size={16} />
-            Liberados: {allowedEmailsHint()}
-          </p>
-        ) : null}
-
         <form className="auth-form" onSubmit={(e) => void handleSubmit(e)}>
           <div className="field">
             <label htmlFor="auth-email">E-mail</label>
-            {allowed.length > 0 && allowed.length <= 3 ? (
-              <select
-                id="auth-email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              >
-                {allowed.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                id="auth-email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="familia@email.com"
-                required
-              />
-            )}
+            <input
+              id="auth-email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="familia@email.com"
+              required
+            />
           </div>
           <div className="field">
             <label htmlFor="auth-pass">Senha</label>

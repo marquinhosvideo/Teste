@@ -26,7 +26,51 @@ type TripDocumentRow = {
 function isValidTrip(value: unknown): value is Trip {
   if (!value || typeof value !== 'object') return false
   const trip = value as Trip
-  return Array.isArray(trip.days) && trip.days.length > 0
+  if (
+    typeof trip.name !== 'string' ||
+    trip.name.length > 200 ||
+    !Array.isArray(trip.days) ||
+    trip.days.length === 0 ||
+    trip.days.length > 100 ||
+    !Array.isArray(trip.expenses) ||
+    trip.expenses.length > 5000 ||
+    !trip.expenses.every(
+      (expense) =>
+        expense &&
+        typeof expense.id === 'string' &&
+        expense.id.length <= 200 &&
+        typeof expense.dayId === 'string' &&
+        expense.dayId.length <= 200 &&
+        typeof expense.description === 'string' &&
+        expense.description.trim().length > 0 &&
+        expense.description.length <= 500 &&
+        typeof expense.amount === 'number' &&
+        Number.isFinite(expense.amount) &&
+        expense.amount >= 0 &&
+        expense.amount <= 1_000_000,
+    )
+  ) {
+    return false
+  }
+
+  return trip.days.every(
+    (day) =>
+      day &&
+      typeof day.id === 'string' &&
+      day.id.length <= 200 &&
+      typeof day.date === 'string' &&
+      /^\d{4}-\d{2}-\d{2}$/.test(day.date) &&
+      Array.isArray(day.activities) &&
+      day.activities.length <= 100 &&
+      day.activities.every(
+        (activity) =>
+          activity &&
+          typeof activity.id === 'string' &&
+          activity.id.length <= 200 &&
+          typeof activity.title === 'string' &&
+          activity.title.length <= 1000,
+      ),
+  )
 }
 
 export async function fetchRemoteState(): Promise<{
@@ -96,6 +140,9 @@ export function applyRemoteToTrip(
 
 export async function upsertTripDocument(trip: Trip): Promise<void> {
   if (!supabase) return
+  if (!isValidTrip(trip)) {
+    throw new Error('O roteiro contém dados inválidos ou excede os limites permitidos.')
+  }
   const { error } = await supabase.from('trip_document').upsert({
     id: 'current',
     trip: structuredClone(trip),
