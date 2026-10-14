@@ -1105,15 +1105,6 @@ html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
   gap: 12px;
 }
 
-.auth-hint {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--color-ink-muted-48);
-  margin: 0;
-}
-
 .auth-allowlist {
   display: flex;
   align-items: flex-start;
