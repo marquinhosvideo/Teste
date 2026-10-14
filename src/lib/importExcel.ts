@@ -1,10 +1,14 @@
 import type { WorkSheet } from 'xlsx'
-import type { Activity, BudgetId, Day, Expense, Tip, Trip } from '../types'
+import type { Activity, BudgetId, Day, Expense, SavedPlace, Tip, Trip } from '../types'
 import { usdToBrl } from './currency'
 import { parseAmount, uid } from './format'
 import { normalizeBudgetId } from './budgets'
+import { collectTripLocations, inferPlaceCategory, normalizePlace } from './locations'
+import { parseDayMeta } from './dayMeta'
 
 type XLSXModule = typeof import('xlsx')
+const MAX_IMPORT_BYTES = 10 * 1024 * 1024
+const MAX_SHEET_ROWS = 5000
 
 async function loadXlsx(): Promise<XLSXModule> {
   return import('xlsx')
@@ -27,6 +31,8 @@ function normalizeHeader(value: unknown): string {
 function clean(value: unknown): string {
   return String(value ?? '')
     .replace(/\r\n/g, '\n')
+    .replace(/\0/g, '')
+    .slice(0, 10_000)
     .trim()
 }
 
@@ -236,7 +242,7 @@ function buildExpensesFromRows(
       const date = excelDateToIso(pick(row, ['data', 'date']), XLSX)
       const description = clean(
         pick(row, ['descricao', 'descrição', 'description', 'item', 'gasto']),
-      )
+      ).slice(0, 500)
       // Planilha de gastos: valores em USD → grava em BRL
       const amountUsd = parseAmount(
         pick(row, ['valor', 'amount', 'preco', 'preço', 'custo']),
@@ -287,20 +293,61 @@ function buildTips(rows: Row[]): Tip[] {
     .filter((t) => t.tema && t.texto)
 }
 
+function buildLocations(rows: Row[], categoryKeys: string[]): SavedPlace[] {
+  const locations: SavedPlace[] = []
+  const hasExplicitCategory = categoryKeys.includes('categoria')
+  for (const row of rows) {
+    const name = clean(pick(row, ['nome / local', 'nome', 'lugar', 'local']))
+    const rawAddress = clean(pick(row, ['endereco', 'endereço']))
+    if (!rawAddress) continue
+
+    const categoryHint = clean(pick(row, categoryKeys))
+    const parsed = parseDayMeta(`📍 ${name ? `${name} – ${rawAddress}` : rawAddress}`).places
+    for (const place of parsed) {
+      const normalized = normalizePlace({
+        name: place.name,
+        address: place.addr,
+        category:
+          (hasExplicitCategory ? categoryHint : '') ||
+          inferPlaceCategory(place.name, categoryHint),
+      })
+      if (normalized) locations.push(normalized)
+    }
+  }
+  return locations
+}
+
 export type ImportResult = {
   trip: Trip
-  stats: { days: number; activities: number; expenses: number; tips: number }
+  stats: {
+    days: number
+    activities: number
+    expenses: number
+    tips: number
+    locations: number
+  }
 }
 
 export async function importTripFromFile(
   file: File,
   current: Trip,
 ): Promise<ImportResult> {
+  if (!/\.xlsx?$/i.test(file.name)) {
+    throw new Error('Use um arquivo Excel .xlsx ou .xls.')
+  }
+  if (file.size <= 0 || file.size > MAX_IMPORT_BYTES) {
+    throw new Error('O arquivo deve ter até 10 MB.')
+  }
+
   const XLSX = await loadXlsx()
   const buffer = await file.arrayBuffer()
-  const workbook = XLSX.read(buffer, { type: 'array', cellDates: false })
+  const workbook = XLSX.read(buffer, {
+    type: 'array',
+    cellDates: false,
+    sheetRows: MAX_SHEET_ROWS,
+  })
 
-  const sheetNames = workbook.SheetNames
+  const sheetNames = workbook.SheetNames.slice(0, 30)
   const roteiroName =
     sheetNames.find((n) =>
       /roteiro|itinerario|programacao|agenda|plano|completo/i.test(n),
@@ -310,11 +357,17 @@ export async function importTripFromFile(
   )
   const tipsName = sheetNames.find((n) => /dica|ressalva/i.test(n))
   const metaName = sheetNames.find((n) => /viagem|trip|info|geral/i.test(n))
+  const childPlacesName = sheetNames.find((n) => /lugares.*crian/i.test(n))
+  const shoppingName = sheetNames.find((n) => /compras.*extra/i.test(n))
 
   const roteiroSheet = roteiroName ? workbook.Sheets[roteiroName] : undefined
   const gastosSheet = gastosName ? workbook.Sheets[gastosName] : undefined
   const tipsSheet = tipsName ? workbook.Sheets[tipsName] : undefined
   const metaSheet = metaName ? workbook.Sheets[metaName] : undefined
+  const childPlacesSheet = childPlacesName
+    ? workbook.Sheets[childPlacesName]
+    : undefined
+  const shoppingSheet = shoppingName ? workbook.Sheets[shoppingName] : undefined
 
   const roteiroRows = roteiroSheet ? sheetToRows(XLSX, roteiroSheet) : []
   const days = buildDaysFromRows(roteiroRows, XLSX)
@@ -335,6 +388,14 @@ export async function importTripFromFile(
 
   const expenses = buildExpensesFromRows(expenseRows, days, XLSX)
   const tips = tipsSheet ? buildTips(sheetToRows(XLSX, tipsSheet)) : current.tips
+  const importedLocations = [
+    ...(shoppingSheet
+      ? buildLocations(sheetToRows(XLSX, shoppingSheet), ['categoria'])
+      : []),
+    ...(childPlacesSheet
+      ? buildLocations(sheetToRows(XLSX, childPlacesSheet), ['o que e', 'o que é'])
+      : []),
+  ]
 
   const metaRows = metaSheet ? sheetToRows(XLSX, metaSheet) : []
   const meta = metaRows[0] ?? {}
@@ -354,6 +415,13 @@ export async function importTripFromFile(
     days,
     expenses,
     tips,
+    locations: collectTripLocations({
+      ...current,
+      days,
+      expenses,
+      tips,
+      locations: [...(current.locations ?? []), ...importedLocations],
+    }),
     budgetLimits: current.budgetLimits ?? {
       marcos: 5000,
       dielen: 5000,
@@ -370,6 +438,7 @@ export async function importTripFromFile(
       activities: days.reduce((sum, d) => sum + d.activities.length, 0),
       expenses: expenses.length,
       tips: tips?.length ?? 0,
+      locations: trip.locations?.length ?? 0,
     },
   }
 }

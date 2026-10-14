@@ -3,6 +3,7 @@ import { Cloud, FileSpreadsheet, History, RotateCcw } from 'lucide-react'
 import type { Trip } from '../types'
 import { importTripFromFile } from '../lib/importExcel'
 import { formatShortDate } from '../lib/format'
+import { collectTripLocations } from '../lib/locations'
 import { isSupabaseConfigured } from '../lib/supabase'
 import {
   listTripVersions,
@@ -85,6 +86,7 @@ export function ImportView({ trip, onImported, onReset, onRestore }: Props) {
       await refreshVersions()
       setStatus(
         `Importado: ${result.stats.days} dias, ${result.stats.activities} períodos` +
+          (result.stats.locations ? `, ${result.stats.locations} locais` : '') +
           (result.stats.tips ? `, ${result.stats.tips} dicas` : '') +
           (result.stats.expenses ? `, ${result.stats.expenses} gastos` : '') +
           '. Versão anterior salva no banco.',
@@ -159,7 +161,7 @@ export function ImportView({ trip, onImported, onReset, onRestore }: Props) {
           <FileSpreadsheet size={40} strokeWidth={1.5} className="import-icon" />
           <h1 className="display-lg">Planilha.</h1>
           <p className="lede">
-            Importe o Excel do roteiro para atualizar dias e dicas. Gastos na planilha
+            Importe o Excel do roteiro para atualizar dias, locais e observações. Gastos na planilha
             entram em US$ e são convertidos para reais. Marcações já feitas no app são
             mantidas quando possível. Até {MAX_TRIP_VERSIONS} versões ficam no banco
             (Supabase) para recuperar de qualquer aparelho.
@@ -184,7 +186,7 @@ export function ImportView({ trip, onImported, onReset, onRestore }: Props) {
             <input
               ref={inputRef}
               type="file"
-              accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
+              accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
               hidden
               onChange={(e) => void handleFile(e.target.files?.[0])}
             />
@@ -200,7 +202,7 @@ export function ImportView({ trip, onImported, onReset, onRestore }: Props) {
             <p className="utility-card__eyebrow">Arquivo atual</p>
             <h3 className="utility-card__title">{fileName}</h3>
             <p className="utility-card__footnote">
-              {trip.days.length} dias · {(trip.tips || []).length} dicas ·{' '}
+              {trip.days.length} dias · {collectTripLocations(trip).length} locais ·{' '}
               {formatShortDate(trip.startDate)} a {formatShortDate(trip.endDate)}
             </p>
           </article>
