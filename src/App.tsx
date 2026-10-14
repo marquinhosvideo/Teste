@@ -3,6 +3,7 @@ import { CalendarDays, Home, Lightbulb, Receipt, Upload } from 'lucide-react'
 import type { TabId } from './types'
 import { useAuth } from './hooks/useAuth'
 import { useTrip } from './hooks/useTrip'
+import { useViewportLayout } from './hooks/useViewportLayout'
 import { isSupabaseConfigured } from './lib/supabase'
 import { AuthScreen } from './components/AuthScreen'
 import { SetupBanner } from './components/SetupBanner'
@@ -25,6 +26,7 @@ const TABS: { id: TabId; label: string; icon: typeof Home }[] = [
 
 export default function App() {
   const [tab, setTab] = useState<TabId>('hoje')
+  const viewport = useViewportLayout()
   const auth = useAuth()
   const remoteEnabled = isSupabaseConfigured && Boolean(auth.session)
   const {
@@ -44,9 +46,11 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const shellClass = `app-shell app-shell--${viewport.device} app-shell--${viewport.aspect}`
+
   if (isSupabaseConfigured && !auth.ready) {
     return (
-      <div className="app-shell">
+      <div className={shellClass}>
         <header className="global-nav">
           <p className="global-nav__brand">Orlando 2026</p>
         </header>
@@ -59,7 +63,7 @@ export default function App() {
 
   if (isSupabaseConfigured && !auth.session) {
     return (
-      <div className="app-shell">
+      <div className={shellClass}>
         <AuthScreen
           error={auth.error}
           onSignIn={auth.signIn}
@@ -71,7 +75,7 @@ export default function App() {
 
   if (isSupabaseConfigured && auth.session && auth.needsPasswordReset) {
     return (
-      <div className="app-shell">
+      <div className={shellClass}>
         <UpdatePasswordScreen
           email={auth.user?.email}
           onSubmit={auth.updatePassword}
@@ -81,7 +85,7 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className={shellClass}>
       <header className="global-nav">
         <p className="global-nav__brand">Orlando 2026</p>
       </header>

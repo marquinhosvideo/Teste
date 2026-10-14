@@ -11,6 +11,16 @@
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Orlando 2026</title>
+    <script>
+      ;(function () {
+        try {
+          var w = window.innerWidth
+          var h = Math.max(window.innerHeight, 1)
+          document.documentElement.dataset.device = w >= 900 ? 'desktop' : 'mobile'
+          document.documentElement.dataset.aspect = w / h >= 1 ? 'landscape' : 'portrait'
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

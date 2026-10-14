@@ -27,6 +27,32 @@
   --tab-h: 60px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --content-max: 640px;
+  --hero-photo-ratio: 4 / 5;
+  --hero-photo-max-h: min(52vh, 440px);
+}
+
+/* Mobile landscape: wider, shorter hero photo */
+html[data-device='mobile'][data-aspect='landscape'],
+.app-shell--mobile.app-shell--landscape {
+  --content-max: 720px;
+  --hero-photo-ratio: 21 / 9;
+  --hero-photo-max-h: min(38vh, 280px);
+}
+
+/* Desktop portrait (tall window): roomier column, still stacked hero */
+html[data-device='desktop'][data-aspect='portrait'],
+.app-shell--desktop.app-shell--portrait {
+  --content-max: 720px;
+  --hero-photo-ratio: 16 / 10;
+  --hero-photo-max-h: min(42vh, 480px);
+}
+
+/* Desktop landscape: wide reading column + cinematic photo */
+html[data-device='desktop'][data-aspect='landscape'],
+.app-shell--desktop.app-shell--landscape {
+  --content-max: 980px;
+  --hero-photo-ratio: 2.2 / 1;
+  --hero-photo-max-h: min(48vh, 560px);
 }
 
 .app-shell {
@@ -178,8 +204,8 @@
 .day-hero__photo {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 360px;
+  aspect-ratio: var(--hero-photo-ratio);
+  max-height: var(--hero-photo-max-h);
   background: var(--color-surface-tile-3);
   overflow: hidden;
 }
@@ -188,6 +214,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   animation: photo-in 700ms ease-out both;
 }
 
@@ -195,6 +222,57 @@
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 36px 20px 44px;
+}
+
+/* Desktop landscape: photo + copy side by side */
+html[data-device='desktop'][data-aspect='landscape'] .day-hero,
+.app-shell--desktop.app-shell--landscape .day-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
+  align-items: stretch;
+  min-height: min(52vh, 560px);
+}
+
+html[data-device='desktop'][data-aspect='landscape'] .day-hero__photo,
+.app-shell--desktop.app-shell--landscape .day-hero__photo {
+  aspect-ratio: auto;
+  max-height: none;
+  height: 100%;
+  min-height: 420px;
+}
+
+html[data-device='desktop'][data-aspect='landscape'] .day-hero__body,
+.app-shell--desktop.app-shell--landscape .day-hero__body {
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 40px 52px;
+}
+
+html[data-device='desktop'] .band__inner,
+html[data-device='desktop'] .sync-row,
+html[data-device='desktop'] .day-chips,
+.app-shell--desktop .band__inner,
+.app-shell--desktop .sync-row,
+.app-shell--desktop .day-chips {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+html[data-device='desktop'] .tab-bar__inner,
+.app-shell--desktop .tab-bar__inner {
+  max-width: min(var(--content-max), 720px);
+}
+
+html[data-device='mobile'][data-aspect='landscape'] .day-hero__body,
+.app-shell--mobile.app-shell--landscape .day-hero__body {
+  padding: 24px 20px 28px;
+}
+
+html[data-device='mobile'][data-aspect='landscape'] .day-hero__progress-row,
+.app-shell--mobile.app-shell--landscape .day-hero__progress-row {
+  margin-top: 20px;
 }
 
 .day-hero__eyebrow {
@@ -1027,15 +1105,6 @@
   gap: 12px;
 }
 
-.auth-hint {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--color-ink-muted-48);
-  margin: 0;
-}
-
 .auth-allowlist {
   display: flex;
   align-items: flex-start;
@@ -1340,5 +1409,50 @@
 
   .budget-widgets__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Fallback when JS has not stamped data-device yet */
+@media (min-width: 900px) and (orientation: landscape) {
+  :root:not([data-device]) {
+    --content-max: 980px;
+    --hero-photo-ratio: 2.2 / 1;
+    --hero-photo-max-h: min(48vh, 560px);
+  }
+
+  :root:not([data-device]) .day-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
+    align-items: stretch;
+    min-height: min(52vh, 560px);
+  }
+
+  :root:not([data-device]) .day-hero__photo {
+    aspect-ratio: auto;
+    max-height: none;
+    height: 100%;
+    min-height: 420px;
+  }
+
+  :root:not([data-device]) .day-hero__body {
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 40px 52px;
+  }
+}
+
+@media (max-width: 899px) and (orientation: landscape) {
+  :root:not([data-device]) {
+    --hero-photo-ratio: 21 / 9;
+    --hero-photo-max-h: min(38vh, 280px);
+  }
+}
+
+@media (max-width: 899px) and (orientation: portrait) {
+  :root:not([data-device]) {
+    --hero-photo-ratio: 4 / 5;
+    --hero-photo-max-h: min(52vh, 440px);
   }
 }
