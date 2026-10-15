@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Copy, MapPin, Navigation } from 'lucide-react'
-import type { Trip } from '../types'
+import type { SavedPlace, Trip } from '../types'
 import { copyText } from '../lib/addresses'
 import { groupTripLocations } from '../lib/locations'
 import { sampleTrip } from '../data/sampleTrip'
@@ -36,7 +36,7 @@ export function LocationsView({ trip }: Props) {
           <h1 className="display-lg">Todos os endereços.</h1>
           <p className="lede">
             {total
-              ? `${total} locais do planejamento, em Alimentação, Compras e Lazer.`
+              ? `${total} locais do planejamento, em Alimentação, Lazer e Compras.`
               : 'Nenhum endereço salvo no planejamento.'}
           </p>
         </div>
@@ -49,50 +49,80 @@ export function LocationsView({ trip }: Props) {
               <h2 className="section-title">{group.category}</h2>
               <span>{group.places.length}</span>
             </div>
-            <ul className="locations-list">
-              {group.places.map((place) => {
-                const key = `${place.name}|${place.address}`
-                const query = encodeURIComponent(`${place.name}, ${place.address}`)
-                return (
-                  <li className="location-card" key={key}>
-                    <MapPin size={19} aria-hidden className="location-card__pin" />
-                    <div className="location-card__text">
-                      <h3>{place.name}</h3>
-                      <p>{place.address}</p>
-                    </div>
-                    <div className="location-card__actions">
-                      <button
-                        type="button"
-                        className="icon-btn"
-                        onClick={() => void handleCopy(key, `${place.name} – ${place.address}`)}
-                        aria-label={`Copiar endereço de ${place.name}`}
-                        title="Copiar endereço"
-                      >
-                        <Copy size={18} aria-hidden />
-                      </button>
-                      <a
-                        className="icon-btn"
-                        href={`https://www.google.com/maps/search/?api=1&query=${query}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Abrir ${place.name} no mapa`}
-                        title="Abrir no mapa"
-                      >
-                        <Navigation size={18} aria-hidden />
-                      </a>
-                    </div>
-                    {copied === key ? (
-                      <span className="location-card__copied" role="status">
-                        Copiado
-                      </span>
-                    ) : null}
-                  </li>
-                )
-              })}
-            </ul>
+            {group.subgroups.length > 0 ? (
+              group.subgroups.map((subgroup) => (
+                <div className="locations-subgroup" key={subgroup.category}>
+                  <div className="locations-subgroup__head">
+                    <h3>{subgroup.category}</h3>
+                    <span>{subgroup.places.length}</span>
+                  </div>
+                  <LocationCards
+                    places={subgroup.places}
+                    copied={copied}
+                    onCopy={handleCopy}
+                  />
+                </div>
+              ))
+            ) : (
+              <LocationCards places={group.places} copied={copied} onCopy={handleCopy} />
+            )}
           </div>
         </section>
       ))}
     </section>
+  )
+}
+
+function LocationCards({
+  places,
+  copied,
+  onCopy,
+}: {
+  places: SavedPlace[]
+  copied: string | null
+  onCopy: (key: string, text: string) => void
+}) {
+  return (
+    <ul className="locations-list">
+      {places.map((place) => {
+        const key = `${place.name}|${place.address}`
+        const query = encodeURIComponent(`${place.name}, ${place.address}`)
+        return (
+          <li className="location-card" key={key}>
+            <MapPin size={19} aria-hidden className="location-card__pin" />
+            <div className="location-card__text">
+              <h3>{place.name}</h3>
+              <p>{place.address}</p>
+            </div>
+            <div className="location-card__actions">
+              <button
+                type="button"
+                className="icon-btn"
+                onClick={() => onCopy(key, `${place.name} – ${place.address}`)}
+                aria-label={`Copiar endereço de ${place.name}`}
+                title="Copiar endereço"
+              >
+                <Copy size={18} aria-hidden />
+              </button>
+              <a
+                className="icon-btn"
+                href={`https://www.google.com/maps/search/?api=1&query=${query}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Abrir ${place.name} no mapa`}
+                title="Abrir no mapa"
+              >
+                <Navigation size={18} aria-hidden />
+              </a>
+            </div>
+            {copied === key ? (
+              <span className="location-card__copied" role="status">
+                Copiado
+              </span>
+            ) : null}
+          </li>
+        )
+      })}
+    </ul>
   )
 }
