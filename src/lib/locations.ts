@@ -1,23 +1,17 @@
 import type { Day, SavedPlace, Trip } from '../types'
 import { parseDayMeta } from './dayMeta'
 
-const CATEGORY_RULES: Array<[string, RegExp]> = [
-  ['Alimentação', /\b(caf[eé]|chef|restaurant|dining|food|refei[cç][aã]o)\b/i],
-  [
-    'Parques',
-    /\b(magic kingdom|animal kingdom|hollywood studios|epic universe|universal|gatorland|crayola)\b/i,
-  ],
-  [
-    'Compras',
-    /\b(outlet|mall|walmart|target|ross|burlington|best buy|ulta|marshalls|tj maxx|t\.j\. maxx|five below|world of disney|beauty master|nordstrom|factory stores?)\b/i,
-  ],
-  ['Aeroportos', /\b(aeroporto|airport|\bGIG\b|\bMIA\b)\b/i],
-  [
-    'Passeios',
-    /\b(disney springs|icon park|winter garden|leu gardens|lake eola|celebration|plant st|farmers market)\b/i,
-  ],
-  ['Hospedagem', /\b(hotel|resort)\b/i],
-]
+export const PLACE_SECTIONS = ['Alimentação', 'Compras', 'Lazer'] as const
+export type PlaceSection = (typeof PLACE_SECTIONS)[number]
+
+const FOOD_NAME = /\b(caf[eé]|chef|restaurant|dining)\b/i
+const LEISURE_BEFORE_STORE = /\b(play park|ticket center|crayola experience)\b/i
+const LEISURE_OVERRIDE =
+  /\b(disney springs|icon park|magic kingdom|animal kingdom|hollywood studios|epic universe|gatorland|peppa|theme park)\b/i
+const STORE_NAME =
+  /\b(best buy|apple store|micro center|walmart|target|five below|burlington|marshalls|nordstrom|ross|t\.?\s*j\.?\s*maxx|ulta|beauty|outlets?|factory stores?|sawgrass|dolphin mall|buybuy|baby|mall|crayola store|old town|world of disney)\b/i
+const LEISURE_NAME =
+  /\b(universal|leu gardens|lake eola|celebration|winter garden|plant st|farmers market|science center|sea life|kennedy|cocoa beach|gaylord|now snowing|splash|boat tour|aquarium|gingerbread|resort hopping|aeroporto|airport)\b/i
 
 function clean(value: string): string {
   return value
@@ -26,24 +20,54 @@ function clean(value: string): string {
     .trim()
 }
 
-export function inferPlaceCategory(name: string, context = ''): string {
-  if (
+function fold(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('pt-BR')
+}
+
+function isFood(name: string, category: string, context: string): boolean {
+  if (/^aliment/.test(fold(category))) return true
+  if (FOOD_NAME.test(name)) return true
+  return (
     /refei[cç][aã]o|alimenta|chef|caf[eé]|jantar|almo[cç]o/i.test(context) &&
-    /resort|hotel|chef|caf[eé]|restaurant/i.test(name)
-  ) {
-    return 'Alimentação'
-  }
+    /\b(resort|hotel|chef|caf[eé]|restaurant)\b/i.test(name)
+  )
+}
 
-  for (const [category, pattern] of CATEGORY_RULES) {
-    if (pattern.test(name)) return category
-  }
+function isLeisureCategory(category: string): boolean {
+  return /^(parque|passeio|centrinho|hospedagem|aeroporto|lazer|outros)\b/.test(fold(category))
+}
 
-  if (/compras|mercado|beleza/i.test(context)) return 'Compras'
-  if (/parque/i.test(context)) return 'Parques'
-  if (/refei[cç][aã]o|alimenta/i.test(context)) return 'Alimentação'
-  if (/passeio/i.test(context)) return 'Passeios'
-  if (/viagem/i.test(context)) return 'Aeroportos'
-  return 'Outros'
+function isShoppingCategory(category: string): boolean {
+  return /(compra|shopping|beleza|bebe|loja|off-price|outlet|variedade|rua de loja|moda|eletronico)/.test(
+    fold(category),
+  )
+}
+
+export function classifyPlace(
+  name: string,
+  category = '',
+  context = '',
+): PlaceSection {
+  if (isFood(name, category, context)) return 'Alimentação'
+  if (LEISURE_BEFORE_STORE.test(name)) return 'Lazer'
+  if (STORE_NAME.test(name)) return 'Compras'
+  if (LEISURE_OVERRIDE.test(name) || LEISURE_NAME.test(name) || isLeisureCategory(category)) {
+    return 'Lazer'
+  }
+  if (isShoppingCategory(category)) return 'Compras'
+  if (/\b(compras|mercado|beleza|outlet)\b/i.test(context) && context.length <= 40) {
+    return 'Compras'
+  }
+  return 'Lazer'
+}
+
+export function inferPlaceCategory(name: string, context = ''): string {
+  const category = context.length <= 40 ? context : ''
+  const dayContext = category ? '' : context
+  return classifyPlace(name, category, dayContext)
 }
 
 function placesFromDay(day: Day): SavedPlace[] {
@@ -95,22 +119,28 @@ export function collectTripLocations(trip: Trip): SavedPlace[] {
 }
 
 export type PlaceGroup = {
-  category: string
+  category: PlaceSection
   places: SavedPlace[]
 }
 
 export function groupTripLocations(trip: Trip): PlaceGroup[] {
-  const groups = new Map<string, SavedPlace[]>()
+  const sections = new Map<PlaceSection, SavedPlace[]>()
+
   for (const place of collectTripLocations(trip)) {
-    const group = groups.get(place.category) ?? []
-    group.push(place)
-    groups.set(place.category, group)
+    const section = classifyPlace(place.name, place.category)
+    const sectionPlaces = sections.get(section) ?? []
+    sectionPlaces.push(place)
+    sections.set(section, sectionPlaces)
   }
 
-  return [...groups.entries()]
-    .sort(([a], [b]) => a.localeCompare(b, 'pt-BR'))
-    .map(([category, places]) => ({
-      category,
-      places: places.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')),
-    }))
+  return PLACE_SECTIONS.flatMap((category) => {
+    const places = sections.get(category)
+    if (!places?.length) return []
+    return [
+      {
+        category,
+        places: places.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')),
+      },
+    ]
+  })
 }

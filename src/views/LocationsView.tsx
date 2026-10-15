@@ -36,7 +36,7 @@ export function LocationsView({ trip }: Props) {
           <h1 className="display-lg">Todos os endereços.</h1>
           <p className="lede">
             {total
-              ? `${total} locais do planejamento, agrupados por categoria.`
+              ? `${total} locais do planejamento, em Alimentação, Compras e Lazer.`
               : 'Nenhum endereço salvo no planejamento.'}
           </p>
         </div>
