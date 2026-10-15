@@ -1,8 +1,11 @@
 import type { Day, SavedPlace, Trip } from '../types'
 import { parseDayMeta } from './dayMeta'
 
-export const PLACE_SECTIONS = ['Alimentação', 'Compras', 'Lazer'] as const
+export const PLACE_SECTIONS = ['Alimentação', 'Lazer', 'Compras'] as const
 export type PlaceSection = (typeof PLACE_SECTIONS)[number]
+
+export const SHOPPING_KINDS = ['Eletrônicos', 'Moda', 'Geral'] as const
+export type ShoppingKind = (typeof SHOPPING_KINDS)[number]
 
 const FOOD_NAME = /\b(caf[eé]|chef|restaurant|dining)\b/i
 const LEISURE_BEFORE_STORE = /\b(play park|ticket center|crayola experience)\b/i
@@ -12,6 +15,9 @@ const STORE_NAME =
   /\b(best buy|apple store|micro center|walmart|target|five below|burlington|marshalls|nordstrom|ross|t\.?\s*j\.?\s*maxx|ulta|beauty|outlets?|factory stores?|sawgrass|dolphin mall|buybuy|baby|mall|crayola store|old town|world of disney)\b/i
 const LEISURE_NAME =
   /\b(universal|leu gardens|lake eola|celebration|winter garden|plant st|farmers market|science center|sea life|kennedy|cocoa beach|gaylord|now snowing|splash|boat tour|aquarium|gingerbread|resort hopping|aeroporto|airport)\b/i
+const ELECTRONICS_NAME = /\b(best buy|apple store|micro center|eletr[oô]nic)/i
+const FASHION_NAME =
+  /\b(burlington|marshalls|nordstrom|ross|t\.?\s*j\.?\s*maxx|ulta|beauty|outlets?|factory stores?|sawgrass|nike|zara|moda)\b/i
 
 function clean(value: string): string {
   return value
@@ -46,28 +52,44 @@ function isShoppingCategory(category: string): boolean {
   )
 }
 
+function shoppingKind(name: string, category: string): ShoppingKind {
+  const folded = fold(category)
+  if (folded === 'eletronicos') return 'Eletrônicos'
+  if (folded === 'moda') return 'Moda'
+  if (folded === 'geral') return 'Geral'
+
+  const blob = `${name} ${category}`
+  if (ELECTRONICS_NAME.test(blob)) return 'Eletrônicos'
+  if (FASHION_NAME.test(blob) || /beleza|off-price|outlet|moda/.test(folded)) return 'Moda'
+  return 'Geral'
+}
+
 export function classifyPlace(
   name: string,
   category = '',
   context = '',
-): PlaceSection {
-  if (isFood(name, category, context)) return 'Alimentação'
-  if (LEISURE_BEFORE_STORE.test(name)) return 'Lazer'
-  if (STORE_NAME.test(name)) return 'Compras'
+): { section: PlaceSection; shoppingKind?: ShoppingKind } {
+  if (isFood(name, category, context)) return { section: 'Alimentação' }
+  if (LEISURE_BEFORE_STORE.test(name)) return { section: 'Lazer' }
+  if (STORE_NAME.test(name)) {
+    return { section: 'Compras', shoppingKind: shoppingKind(name, category) }
+  }
   if (LEISURE_OVERRIDE.test(name) || LEISURE_NAME.test(name) || isLeisureCategory(category)) {
-    return 'Lazer'
+    return { section: 'Lazer' }
   }
-  if (isShoppingCategory(category)) return 'Compras'
+  if (isShoppingCategory(category)) {
+    return { section: 'Compras', shoppingKind: shoppingKind(name, category) }
+  }
   if (/\b(compras|mercado|beleza|outlet)\b/i.test(context) && context.length <= 40) {
-    return 'Compras'
+    return { section: 'Compras', shoppingKind: shoppingKind(name, context) }
   }
-  return 'Lazer'
+  return { section: 'Lazer' }
 }
 
 export function inferPlaceCategory(name: string, context = ''): string {
   const category = context.length <= 40 ? context : ''
   const dayContext = category ? '' : context
-  return classifyPlace(name, category, dayContext)
+  return classifyPlace(name, category, dayContext).section
 }
 
 function placesFromDay(day: Day): SavedPlace[] {
@@ -118,29 +140,48 @@ export function collectTripLocations(trip: Trip): SavedPlace[] {
   })
 }
 
+export type PlaceSubgroup = {
+  category: ShoppingKind
+  places: SavedPlace[]
+}
+
 export type PlaceGroup = {
   category: PlaceSection
   places: SavedPlace[]
+  subgroups: PlaceSubgroup[]
+}
+
+function byName(a: SavedPlace, b: SavedPlace): number {
+  return a.name.localeCompare(b.name, 'pt-BR')
 }
 
 export function groupTripLocations(trip: Trip): PlaceGroup[] {
   const sections = new Map<PlaceSection, SavedPlace[]>()
+  const shopping = new Map<ShoppingKind, SavedPlace[]>()
 
   for (const place of collectTripLocations(trip)) {
-    const section = classifyPlace(place.name, place.category)
-    const sectionPlaces = sections.get(section) ?? []
+    const classified = classifyPlace(place.name, place.category)
+    const sectionPlaces = sections.get(classified.section) ?? []
     sectionPlaces.push(place)
-    sections.set(section, sectionPlaces)
+    sections.set(classified.section, sectionPlaces)
+    if (classified.section === 'Compras' && classified.shoppingKind) {
+      const kindPlaces = shopping.get(classified.shoppingKind) ?? []
+      kindPlaces.push(place)
+      shopping.set(classified.shoppingKind, kindPlaces)
+    }
   }
 
   return PLACE_SECTIONS.flatMap((category) => {
     const places = sections.get(category)
     if (!places?.length) return []
-    return [
-      {
-        category,
-        places: places.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')),
-      },
-    ]
+    const subgroups =
+      category === 'Compras'
+        ? SHOPPING_KINDS.flatMap((kind) => {
+            const kindPlaces = shopping.get(kind)
+            if (!kindPlaces?.length) return []
+            return [{ category: kind, places: kindPlaces.sort(byName) }]
+          })
+        : []
+    return [{ category, places: places.sort(byName), subgroups }]
   })
 }
